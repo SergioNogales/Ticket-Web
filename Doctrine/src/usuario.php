@@ -1,0 +1,240 @@
+<?php
+    use Doctrine\ORM\Mapping as ORM;
+    use Doctrine\ORM\EntityManagerInterface;
+    
+    /**
+     * @ORM\Entity
+     * @ORM\Table(name="usuario")
+     */
+
+    class Usuario
+    {
+        /**
+         * @ORM\Id
+         * @ORM\Column(type="string", length=180, unique=true)
+         */
+        private $email;
+
+        /**
+         * @ORM\Column(type="string", options={"default": "cliente"})
+         */
+        private $rol;
+
+        /**
+         * @var string The hashed password
+         * @ORM\Column(type="string")
+         */
+        private $password;
+
+        /**
+         * @ORM\Column(type="string", length=20, nullable=true)
+         */
+        private $telefono;
+
+        /**
+         * @ORM\Column(type="string", length=255, nullable=true)
+         */
+        private $direccion;
+
+        /**
+         * @ORM\Column(type="string", length=100, nullable=true)
+         */
+        private $localidad;
+
+        /**
+         * @ORM\Column(type="string", length=100, nullable=true)
+         */
+        private $nombre;
+
+        /**
+         * @ORM\Column(type="string", length=10, nullable=true)
+         */
+        private $codigoPostal;
+
+        /**
+         * @ORM\Column(type="string", length=20, nullable=true)
+         */
+        private $tarjeta;
+
+        /**
+         * @ORM\Column(type="string", length=2, nullable=true)
+         */
+        private $mesCaducidad;
+
+        /**
+         * @ORM\Column(type="string", length=4, nullable=true)
+         */
+        private $yearCaducidad;
+
+        /**
+         * @ORM\Column(type="string", length=3, nullable=true)
+         */
+        private $ccv;
+
+        /**
+         * @ORM\Column(type="float", options={"default": 0})
+         */
+        private $saldo = 0;
+
+        public function __construct(
+            string $email = "", string $password = "", string $rol = "cliente", string $telefono = "", string $direccion = "", string $localidad = "", string $nombre = "", string $codigoPostal = "", string $tarjeta = "", string $mesCaducidad = "", string $yearCaducidad = "", string $ccv = "", float $saldo = 0) 
+        {
+            $this->email = $email;
+            $this->password = $password;
+            $this->rol = $rol;
+            $this->telefono = $telefono;
+            $this->direccion = $direccion;
+            $this->localidad = $localidad;
+            $this->nombre = $nombre;
+            $this->codigoPostal = $codigoPostal;
+            $this->tarjeta = $tarjeta;
+            $this->mesCaducidad = $mesCaducidad;
+            $this->yearCaducidad = $yearCaducidad;
+            $this->ccv = $ccv;
+            $this->saldo = $saldo;
+        }
+
+        public function getEmail(): ?string
+        {
+            return $this->email;
+        }
+
+        public function setEmail(string $email): self
+        {
+            $this->email = $email;
+            return $this;
+        }
+        
+        public function getRol(): string
+        {
+            return $this->rol;
+        }
+
+        public function setRoles(string $rol): self
+        {
+            $this->rol = $rol;
+            return $this;
+        }
+
+        public function getPassword(): string
+        {
+            return (string) $this->password;
+        }
+
+        public function setPassword(string $password): self
+        {
+            $this->password = $password;
+            return $this;
+        }
+
+        public function getTelefono(): ?string
+        {
+            return $this->telefono;
+        }
+
+        public function setTelefono(?string $telefono): self
+        {
+            $this->telefono = $telefono;
+            return $this;
+        }
+
+        public function getDireccion(): ?string
+        {
+            return $this->direccion;
+        }
+
+        public function setDireccion(?string $direccion): self
+        {
+            $this->direccion = $direccion;
+            return $this;
+        }
+
+        public function getLocalidad(): ?string
+        {
+            return $this->localidad;
+        }
+
+        public function setLocalidad(?string $localidad): self
+        {
+            $this->localidad = $localidad;
+            return $this;
+        }
+
+        public function getNombre(): ?string
+        {
+            return $this->nombre;
+        }
+
+        public function setNombre(?string $nombre): self
+        {
+            $this->nombre = $nombre;
+            return $this;
+        }
+
+        public function getCodigoPostal(): ?string
+        {
+            return $this->codigoPostal;
+        }
+
+        public function setCodigoPostal(?string $codigoPostal): self
+        {
+            $this->codigoPostal = $codigoPostal;
+            return $this;
+        }
+
+        public function getTarjeta(): ?string
+        {
+            return $this->tarjeta;
+        }
+
+        public function setTarjeta(?string $tarjeta): self
+        {
+            $this->tarjeta = $tarjeta;
+            return $this;
+        }
+
+        public function getMesCaducidad(): ?string
+        {
+            return $this->mesCaducidad;
+        }
+
+        public function setMesCaducidad(?string $mesCaducidad): self
+        {
+            $this->mesCaducidad = $mesCaducidad;
+            return $this;
+        }
+
+        public function getYearCaducidad(): ?string
+        {
+            return $this->yearCaducidad;
+        }
+
+        public function setYearCaducidad(?string $yearCaducidad): self
+        {
+            $this->yearCaducidad = $yearCaducidad;
+            return $this;
+        }
+
+        public function getCcv(): ?string
+        {
+            return $this->ccv;
+        }
+
+        public function setCcv(?string $ccv): self
+        {
+            $this->ccv = $ccv;
+            return $this;
+        }
+
+        public function getSaldo(): ?float
+        {
+            return $this->saldo;
+        }
+
+        public function setSaldo(float $saldo): self
+        {
+            $this->saldo = $saldo;
+            return $this;
+        }
+    }
+?>
