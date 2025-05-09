@@ -1,69 +1,17 @@
 <html lang="es">
 <?php
-    require_once 'libreria.php';
+    require_once 'actividades_controladora.php';
     session_start();
     $success = false;
-    
+    $controladora = new actividades_controladora();
+    $errores = [];
+    $success = false;
+
     if ($_SERVER["REQUEST_METHOD"] == "POST") 
     {
-        $nombre = trim($_POST["nombre"] ?? '');
-        $lugar = trim($_POST["lugar"] ?? '');
-        $descripcion = trim($_POST["descripcion"] ?? '');
-        $orden = trim($_POST["orden"] ?? '');
-        $plazas = trim($_POST["plazas"] ?? '');
-        $fecha = trim($_POST["fecha"] ?? '');
-        $errores = [];
-
-        if(empty($nombre)) 
-        {
-            $errores['nombre'] = "El campo del nombre de la actividad está vacío.";
-        }
-        
-        if(empty($lugar)) 
-        {
-            $errores['lugar'] = "El campo del lugar de la actividad está vacío.";
-        }
-        
-        if(empty($descripcion)) 
-        {
-            $errores['descripcion'] = "El campo de la descripción de la actividad está vacío.";
-        } 
-        
-        if(empty($orden)) 
-        {
-            $errores['orden'] = "El campo del orden de la actividad está vacío.";
-        } 
-        elseif(!is_numeric($orden) || $orden <= 0) 
-        {
-            $errores['orden'] = "El orden debe ser un número positivo.";
-        }
-        
-        if(empty($plazas))
-        {
-            $errores['plazas'] = "El campo del número de plazas está vacío.";
-        } 
-        elseif(!is_numeric($plazas) || $plazas <= 0) 
-        {
-            $errores['plazas'] = "El número de plazas debe ser un número positivo.";
-        }
-        
-        if(empty($fecha)) 
-        {
-            $errores['fecha'] = "El campo de la fecha y hora está vacío.";
-        }
-        
-        if($errores === []) 
-        {
-            $success = true;
-            $tempEvent = getEvento($_SESSION['evento']);
-            $tempActividad = $_SESSION['actividad'];
-            $idActividad = $tempActividad->idActividad;
-            $tempEvent->editarActividad($idActividad, $nombre, $descripcion, $orden, $plazas, $lugar, $fecha);
-        }
-        else
-        {
-            $success = false;
-        }
+        $resultado = $controladora->procesarEdicion($_POST);
+        $errores = $resultado['errores'];
+        $success = $resultado['success'];
     }
 ?>
 
@@ -100,12 +48,12 @@
         </header>
         <main>
             <section class="main promotor">
-                <div id="titulo"><h1>Editar Actividad</h1></div>
+                <div id="titulo"><h1>Añadir Actividad</h1></div>
                 <div class="barra2"></div>
                 <div class="margin">
                 <div id="logindiv">
                     <form class="margin" id="update" method="post" action="#">
-                        <h1>Nuevos Datos de la Actividad</h1>
+                        <h1>Datos de la Actividad</h1>
                         <div class="alerta_errorLogin">
                             <?php 
                                 if (!empty($errores))
@@ -120,28 +68,28 @@
                         </div>
                         <div class="alerta_exito">La actividad se ha editado con éxito.</div>
                         <div class="filaLogin">
-                            <div class="label">Nombre</div>
+                            <div class="label">Nuevo Nombre</div>
                             <div class="field"><input type="text" id="nombre" name="nombre"></input></div>
                         </div>
                         <div class="filaLogin">
-                            <div class="label">Lugar</div>
+                            <div class="label">Nuevo Lugar</div>
                             <div class="field"><input type="text" id="lugar" name="lugar"></input></div>
                         </div>
                         <div class="filaLogin">
-                            <div class="label">Descripción</div>
+                            <div class="label">Nuevo Descripción</div>
                             <div class="field"><textarea id="descripcion" name="descripcion"></textarea></div>
                         </div>
                         <div class="filaLogin">
-                            <div class="label">Orden</div>
+                            <div class="label">Nuevo Orden</div>
                             <div class="field"><input type="number" id="orden" name="orden" min="1"></input></div>
                         </div>
                         <div class="filaLogin">
-                            <div class="label">Número de plazas</div>
+                            <div class="label">Nuevo Número de plazas</div>
                             <div class="field"><input type="number" id="plazas" name="plazas" min="1"></input></div>
                         </div>
                         <div class="filaLogin">
-                            <div class="label">Fecha y hora</div>
-                            <div class="field"><input type="datetime-local" id="fecha" name="fecha"></input></div>
+                            <div class="label">Nuevo Fecha y hora</div>
+                            <div class="field"><input type="date" id="fecha" name="fecha"></input></div>
                         </div>
                         <div class="filaLogin">
                             <button id="updateSend" class="boton">Editar Actividad</button>
@@ -171,7 +119,7 @@
             <section class="none">
                 <div class="noneContenedor">
                     <div class="alerta_Login">
-                        <h1>Debe iniciar sesión como promotor y seleccionar un evento para añadir actividades</h1>
+                        <h1>Debe iniciar sesión como promotor y seleccionar un evento para editar actividades</h1>
                     </div>
                 </div>
             </section>
@@ -219,7 +167,7 @@
         if(!empty($_SESSION['usuario']) && isset($_SESSION['evento']))
         {
             $tempUser = $_SESSION['usuario'];
-            if($tempUser->rol === 'promotor')
+            if($tempUser->getRol() === 'promotor')
             {
                 echo "<script>$('.none').hide();</script>";
             }

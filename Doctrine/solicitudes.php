@@ -1,41 +1,25 @@
 <html lang="es">
 
 <?php
-    require_once 'libreria.php';
+    require_once 'solicitudes_controladora.php';
     session_start();
+    $controladora = new solicitudes_controladora();
     $success = false;
+    $errorRol = false;
     if(!empty($_SESSION['usuario']))
     {
         $tempUser = $_SESSION['usuario'];
     }
-    $usuarios = getUsuarios();
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") 
     {
-        if($tempUser->rol !== "admin")
+        if($tempUser->getRol() !== "admin")
         {
-            $success = true;
-            $solicitud = $_POST["rol"];
-            $tempUser->solicitar($solicitud);
+            $controladora->solicitudCliente($_POST);
         }
         else
         {
-            $usuarios = getUsuarios();
-            foreach ($usuarios as $usuario) 
-            {
-                if ($usuario->email === $_POST["email"])
-                {
-                    $tempUser2 = $usuario;
-                    if($_POST["accion"] === "aceptar")
-                    {
-                        $tempUser2->aprobarSolicitud();
-                    }
-                    if($_POST["accion"] === "denegar")
-                    {
-                        $tempUser2->denegarSolicitud();
-                    }
-                }
-            }
+            $controladora->solicitudAdmin($_POST);
         }
     }
 ?>
@@ -84,7 +68,7 @@
                 <h1>Solicitar Rol</h1>
                 <?php
                     $tempUser = $_SESSION["usuario"];
-                    echo '<div class="rolActual"> Rol actual: ' . $tempUser->rol . '</div>';
+                    echo '<div class="rolActual"> Rol actual: ' . $tempUser->getRol() . '</div>';
                 ?>
                 <div class="alerta_exito"> 
                     La solicitud fue enviada correctamente.
@@ -116,7 +100,7 @@
                         <select id="rol" name="rol">
                             <option value="">Selecciona una opción</option>
                             <?php
-                                if($tempUser->rol === 'cliente')
+                                if($tempUser->getRol() === 'cliente')
                                 {
                                     echo '<option value="promotor">Promotor</option>';
                                 }
@@ -155,67 +139,65 @@
                 </script>
             </form>
         </section>
-
-        
         <section class="main eventos admin">
             <h1>Solicitudes de roles</h1>
             <?php
-                $archivo = 'usuarios.json';
-                $usuarios = getUsuarios();
-
+                $usuarios = $controladora->getControladora()->getUsuarios();
                 foreach ($usuarios as $usuario) {
                     $estado = "";
-                    $email = htmlspecialchars($usuario->email);
-                    $nombre = htmlspecialchars($usuario->nombre);
-                    $rolActual = htmlspecialchars($usuario->rol);
-                    $solicitud = $usuario->getSolicitud();
+                    $email = htmlspecialchars($usuario->getEmail());
+                    $nombre = htmlspecialchars($usuario->getNombre());
+                    $rolActual = htmlspecialchars($usuario->getRol());
+                    $solicitudes = $controladora->buscarSolicitudes($usuario);
 
-                    if($solicitud)
+                    foreach($solicitudes as $solicitud)
                     {
-                        $estado = htmlspecialchars($solicitud['estado']);
-                        $nuevoRol = htmlspecialchars($solicitud['rolSolicitado']);
-                    }
-                        
-                    if($estado !== "")
-                    {
-                        echo '<article class="evento">';
-                        echo '    <div class="fila">';
-                        echo '        <div>';
-                        echo '            <div class="tituloEvento">Solicitud de Rol</div>';
-                        echo '            <div class="descEvento">Usuario: ' . $nombre . '</div>';
+                        if($solicitud)
+                        {
+                            $estado = htmlspecialchars($solicitud->getEstado());
+                            $nuevoRol = htmlspecialchars($solicitud->getRolSolicitado());
+                        }
+                            
+                        if($estado !== "")
+                        {
+                            echo '<article class="evento">';
+                            echo '    <div class="fila">';
+                            echo '        <div>';
+                            echo '            <div class="tituloEvento">Solicitud de Rol</div>';
+                            echo '            <div class="descEvento">Usuario: ' . $nombre . '</div>';
 
-                        if($estado === "pendiente")
-                        {
-                            echo '            <div class="fecha">Rol actual: ' . $rolActual . '    Solicita: ' . $nuevoRol . '</div>';
-                            echo '        </div>';
-                            echo '        <form method="post" action="solicitudes.php">';
-                            echo '            <input type="hidden" name="email" value="' . $email . '">';
-                            echo '            <div class="fila">';
-                            echo '                 <button type="submit" class="eventoBoton" name = "accion" value = "aceptar">Aceptar</button>';
-                            echo '                 <button type="submit" class="eventoBoton" name = "accion" value = "denegar">Denegar</button>';
-                            echo '            </div>';
-                            echo '        </form>';
+                            if($estado === "pendiente")
+                            {
+                                echo '            <div class="fecha">Rol actual: ' . $rolActual . '    Solicita: ' . $nuevoRol . '</div>';
+                                echo '        </div>';
+                                echo '        <form method="post" action="solicitudes.php">';
+                                echo '            <input type="hidden" name="email" value="' . $email . '">';
+                                echo '            <div class="fila">';
+                                echo '                 <button type="submit" class="eventoBoton" name = "accion" value = "aceptar">Aceptar</button>';
+                                echo '                 <button type="submit" class="eventoBoton" name = "accion" value = "denegar">Denegar</button>';
+                                echo '            </div>';
+                                echo '        </form>';
+                            }
+                            if($estado === "aprobada")
+                            {
+                                echo '            <div class="fecha"> Solicita: ' . $nuevoRol . '</div>';
+                                echo '        </div>';
+                                echo '        <div id="aprobado"> ✅APROBADA </div>';
+                            }
+                            if($estado === "denegada")
+                            {
+                                echo '            <div class="fecha"> Solicita: ' . $nuevoRol . '</div>';
+                                echo '        </div>';
+                                echo '        <div id="denegado"> ❌DENEGADA </div>';
+                            }
+                            echo '    </div>';
+                            echo '</article>';
+                            echo '<div class="barra3"></div>';
                         }
-                        if($estado === "aprobada")
-                        {
-                            echo '            <div class="fecha"> Solicita: ' . $nuevoRol . '</div>';
-                            echo '        </div>';
-                            echo '        <div id="aprobado"> ✅APROBADA </div>';
-                        }
-                        if($estado === "denegada")
-                        {
-                            echo '            <div class="fecha"> Solicita: ' . $nuevoRol . '</div>';
-                            echo '        </div>';
-                            echo '        <div id="denegado"> ❌DENEGADA </div>';
-                        }
-                        echo '    </div>';
-                        echo '</article>';
-                        echo '<div class="barra3"></div>';
                     }
                 }
             ?>
         </section>
-
 
     </main>
     <footer>
@@ -262,23 +244,23 @@
                 if (!empty($_SESSION["usuario"])) 
                 {
                     $tempUser = $_SESSION["usuario"];
-                    if ($tempUser->rol === "cliente" || $tempUser->rol === "promotor") 
+                    if ($tempUser->getRol() === "cliente" || $tempUser->getRol() === "promotor") 
                     {
                         echo "$('.cliente').show();";
                         echo "$('.none').hide();";
                     }
-                    if ($tempUser->rol === "admin") 
+                    if ($tempUser->getRol() === "admin") 
                     {
                         echo "$('.admin').show();";
                         echo "$('.none').hide();";
                     }
-                    if ($tempUser->getPendiente() !== false)
+                    $solicitud = $controladora->getControladora()->buscarPendiente($tempUser);
+                    if (!empty($solicitud))
                     {
                         echo "$('.alerta_pendiente').show();";
                         echo "$('#rol').hide();";
                         echo "$('.label').hide();";
                     }
-                    
                 }
             ?>
         });

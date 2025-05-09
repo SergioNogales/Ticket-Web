@@ -1,71 +1,17 @@
 <html lang="es">
+
 <?php
-    require_once 'libreria.php';
+    require_once 'eventos_controladora.php';
     session_start();
+    $controladora = new eventos_controladora();
     $success = false;
-    $idEvento = $_SESSION['evento'];
+    $errores = [];
     
     if ($_SERVER["REQUEST_METHOD"] == "POST") 
     {
-        $nombre = trim($_POST["nombre"] ?? '');
-        $ubicacion = trim($_POST["ubicacion"] ?? '');
-        $descripcion = trim($_POST["descripcion"] ?? '');
-        $precio = trim($_POST["precio"] ?? '');
-        $numEntrada = trim($_POST["numEntrada"] ?? '');
-        $tipo = trim($_POST["tipo"] ?? '');
-        $errores = [];
-
-        if(empty($nombre)) 
-        {
-            $errores['nombre'] = "El campo del nombre del evento está vacío.";
-        }
-        
-        if(empty($ubicacion)) 
-        {
-            $errores['ubicacion']= "El campo de la ubicación del evento está vacío.";
-        }
-        
-        if(empty($descripcion)) 
-        {
-            $errores['descripcion'] = "El campo de la descripción del evento está vacío.";
-        } 
-        
-        if(empty($precio)) 
-        {
-            $errores['precio'] = "El campo del precio de cada entrada está vacío.";
-        } 
-        elseif(!is_numeric($precio) || $precio <= 0) 
-        {
-            $errores['precio'] = "El precio debe ser un número positivo.";
-        }
-        
-        if(empty($numEntrada))
-        {
-            $errores['numEntrada'] = "El campo del número de entradas está vacío.";
-        } 
-        elseif(!is_numeric($numEntrada) || $numEntrada <= 0) 
-        {
-            $errores['numEntrada'] = "El número de plazas debe ser un número positivo.";
-        }
-        
-        if(empty($tipo)) 
-        {
-            $errores['tipo'] = "El campo del tipo de evento está vacío.";
-        } 
-        elseif(!in_array($tipo, ['concierto', 'cine', 'prueba deportiva', 'exposicion'])) 
-        {
-            $errores['tipo']  = "El tipo de evento debe ser concierto, cine, prueba deportiva o exposicion.";
-        }
-        if($errores === []) 
-        {
-            $success = true;
-            $evento = getEvento($idEvento);
-            $evento->editarEvento($evento->idEvento, $_POST['nombre'], $_POST['descripcion'], $_POST['tipo'], $_POST['numEntrada'], $_POST['precio'], $_POST['ubicacion'], "2025-01-01", "2025-02-01", $_SESSION['usuario']);
-        }
-        else
-        {
-            $success = false;
-        }
+        $resultado = $controladora->procesarEdicion($_POST);
+        $errores = $resultado['errores'];
+        $success = $resultado['success'];
     }
 ?>
 
@@ -120,7 +66,7 @@
                                 }
                             ?>
                         </div>
-                        <div class="alerta_exito">El evento se ha modificado con éxito.</div>
+                        <div class="alerta_exito">El evento se ha editado con éxito.</div>
                         <div class="filaLogin">
                             <div class="label">Nuevo Nombre</div>
                             <div class="field"><input type="text" id="nombre" name="nombre"></input></div>
@@ -144,6 +90,14 @@
                         <div class="filaLogin">
                             <div class="label">Nuevo Tipo </div>
                             <div class="field"><input type="text" id="tipo" name="tipo"></textarea></div>
+                        </div>
+                        <div class="filaLogin">
+                            <div class="label">Nueva Fecha Inicio</div>
+                            <div class="field"><input type="date" id="fInicio" name="fInicio"></input></div>
+                        </div>
+                        <div class="filaLogin">
+                            <div class="label">Nueva Fecha Fin</div>
+                            <div class="field"><input type="date" id="fFin" name="fFin"></input></div>
                         </div>
                         <div class="filaLogin">
                             <button id="updateSend" class="boton">Editar</button>
@@ -174,6 +128,13 @@
                 <div class="noneContenedor">
                     <div class="alerta_Login">
                         <h1>Debe iniciar sesión como promotor previo a editar eventos</h1>
+                    </div>
+                </div>
+            </section>
+            <section class="none noEvent">
+                <div class="noneContenedor">
+                    <div class="alerta_Login">
+                        <h1>Debe escoger un evento desde su listado.</h1>
                     </div>
                 </div>
             </section>
@@ -221,13 +182,18 @@
         if(!empty($_SESSION['usuario']))
         {
             $tempUser = $_SESSION['usuario'];
-            if($tempUser->rol === 'promotor')
+            if($tempUser->getRol() === 'promotor')
             {
                 echo "<script>$('.none').hide();</script>";
             }
             else
             {
                 echo "<script>$('.promotor').hide();</script>";
+            }
+            if(empty($_SESSION['evento']))
+            {
+                echo "<script>$('.promotor').hide();</script>";
+                echo "<script>$('.noEvent').show();</script>";
             }
             if ($success)
             {

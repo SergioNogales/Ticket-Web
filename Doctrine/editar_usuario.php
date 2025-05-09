@@ -1,5 +1,5 @@
 <?php
-require_once 'libreria.php';
+require_once 'editar_usuario_controladora.php';
 session_start();
 $file = 'usuarios.json';
 $success = false;
@@ -7,14 +7,11 @@ $errorLogin = false;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-    $email = trim($_POST["email"]);
-
-    if (!empty($_SESSION['usuario'])) 
-    {
-        $usuario = $_SESSION['usuario'];
-        $usuario->editarUsuario($email, $_POST["password"], $_POST["telephone"], $_POST["direccion"], $_POST["localidad"], $_POST["name"], $_POST["codigo_postal"], $_POST["tarjeta"], $_POST["mes_caducidad"], $_POST["year_caducidad"], $_POST["ccv"]);
-        $success = true;
-    }
+    $controladora = new editar_usuario_controladora();
+    $resultado = $controladora->procesarEdicion($_POST);
+    
+    $errorLogin = $resultado['error'] ?? '';
+    $success = $resultado['success'] ?? false;
 }
 ?>
 
@@ -80,6 +77,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                                 {
                                     echo "<script>$('.alerta_errorLogin2').show();</script>";
                                     echo "<script>$('.boton').hide();</script>";
+                                }
+                                if (!empty($errorLogin))
+                                {
+                                    echo "<p><b>Errores</b></p>";
+                                    echo "<ul><li>" . htmlspecialchars($errorLogin) . "</li></ul>";
+                                    $success = false;
                                 }
                             ?>
                             </div>

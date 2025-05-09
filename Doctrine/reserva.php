@@ -1,21 +1,21 @@
 <html lang="es">
 <?php
-    require_once 'eventos_controladora.php';
+    require_once 'reserva_controladora.php';
     session_start();
     $addActividad = false;
     $idActividad = "";
-    $controladora = new eventos_controladora();
+    $controladora = new reserva_controladora();
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") 
     {
-        $controladora->procesarDetalles($_POST);
+        $controladora->procesarBorrado($_POST);
     }
 ?>
     <head>
         <meta charset="UTF-8">
         <meta name="author" content="Sergio Nogales Sanz">
         <title>Práctica Final Desarrollo Web I Sergio Nogales Sanz / Landing Page</title>
-        <link rel="stylesheet" href="detallesEvento.css">
+        <link rel="stylesheet" href="reserva.css">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
     <body>
@@ -46,12 +46,12 @@
             <section class="noSignin">
                 <div class="noneContenedor">
                     <div class="alerta_Login">
-                        <h1>Debe tener sesión inciada y haber seleccionado un evento de la lista de eventos.</h1>
+                        <h1>Debe tener sesión inciada para comprar un ticket a un evento.</h1>
                     </div>
                 </div>
             </section>
             <section class="main">
-                <div id="titulo"><h1>Detalles del evento</h1></div>
+                <div id="titulo"><h1>Detalles de la reserva</h1></div>
                 <div class="barra2"></div>
             </section>
             <section id="evento">
@@ -59,79 +59,44 @@
                     if(!empty($_SESSION['usuario']) && isset($_SESSION['evento']) && $_SESSION['evento'] !== "")
                     {
                         $tempEvent = $_SESSION['evento'];
-
-                        echo '                <script>$(".noSignin").hide();</script>';
-                        echo '                <div id="eventoDetalles">';
-                        echo '                    <div class="filaDetalles">';
-                        echo '                        <div id="capsulaDetalles">';
-                        echo '                            <div class="margin">';
-                        echo '                                <div class="tituloEvento">' . $tempEvent->getNombre() . '</div>';
-                        echo '                                <div class="descEvento">' . $tempEvent->getLugar() .'</div>';
-                        echo '                                <div class="fecha">Desde:'. $tempEvent->getFechaInicio()->format('Y-m-d') .'    Hasta:'. $tempEvent->getFechaFin()->format('Y-m-d') .'2025</div>';
-                        echo '                            </div>';
-                        echo '                        </div>';
-                        echo '                        <div class="precio">'. $tempEvent->getPrecio() .'€</div>';
-                        echo '                        <form action="detallesEvento.php" method="post" style="display: inline;">';
-                        echo '                            <input type="hidden" name="reserva" value="'.$tempEvent->getId().'">';
-                        echo '                            <button type="submit" name="accion" value="reserva" class="boton">Inscribirse</button>';
-                        echo '                        </form>';
-                        echo '                    </div>';
-                        echo '                    <div class="tituloEvento">'. $tempEvent->getPlazas() .'  Plazas</div>';
-                        echo '                    <div class="actividades negro">';
-                        echo '                        <div class="margin">';
-                        echo '                            <div class="descEvento">'. $tempEvent->getDescripcion() .'</div>';
+                        echo '<script>$(".noSignin").hide();</script>';
+                        echo '<div class="main">';
+                        echo '<div class="fila" id="ticket">';
+                        echo '    <div id="capsulaTicket">';
+                        echo '        <div class="margin2">';
+                        echo '            <div class="tituloEvento">'.$tempEvent->getNombre().'</div>';
+                        echo '            <div class="descEvento">' . $tempEvent->getLugar() .'</div>';
+                        echo '            <div class="fecha">'. $tempEvent->getFechaInicio()->format('Y-m-d') .'    Hasta:'. $tempEvent->getFechaFin()->format('Y-m-d') .'</div>';
+                        echo '            Cod entrada: WIP';
+                        echo '            <form action="reserva.php" method="post" style="display: inline;">';
+                        echo '                <button type="submit" name="accion" value="reserva" class="boton">Cancelar Reserva</button>';
+                        echo '            </form>';
+                        echo '        </div>';
+                        echo '        <img src="assets/qr.png" class="qr">';
+                        echo '    </div>';
+                        echo '</div>';
                         $actividades = $controladora->getControladora()->buscarActividades($tempEvent);
                         if(!empty($actividades))
                         {
-                            echo '                            <div class="tituloActividades">Actividades programadas:</div>';
+                            echo '<div class="actividades negro">';
+                            echo '<div class="margin">';
+                            echo '<div class="tituloActividades">Actividades programadas:</div>';
                             foreach($actividades as $actividad)
                             {
                                 echo '<li>'. $actividad->getNombre() . '   Descripción: ' . $actividad->getDescripcion() . 'Fecha:' . $actividad->getFecha()->format('Y-m-d')  . 'Lugar:' . $actividad->getLugar() . 'Plazas:' . $actividad->getPlazas() .'</li>';
-                                if($_SESSION['usuario']->getRol() === "promotor") 
-                                {
-                                    echo        '<form action="detallesEvento.php" method="post" style="display: inline;">';
-                                    echo        '<input type="hidden" name="id_actividad" value="'.$actividad->getId().'">';
-                                    echo        '<button type="submit" name="accion" value="borrarActividad" class="boton">Borrar actividad</button>';
-                                    echo        '<button type="submit" name="accion" value="modificarActividad" class="boton">Modificar actividad</button>';
-                                    echo        '</form>';
-                                }
                             }
+                            echo '</div>';
+                            echo '</div>';
+                            echo '</div>';
                         }
                         else
                         {
                             echo '<div class="tituloActividades">No hay actividades programadas</div>';
                         }
-                        echo '                        </div>';
-                        echo '                    </div>';
-                        echo '                </div>';
                     }
                     else
                     {
-                        echo "<script>$('#evento').hide();</script>";
-                    }
-                ?>
-            </section>
-            <?php
-                    if(isset($_SESSION['usuario']) && isset($_SESSION['evento']) && $_SESSION['evento'] !== "" && $_SESSION['usuario']->getRol() === "promotor")
-                    {
-                        echo '<section class="main">';
-                        echo '    <div id="titulo"><h1>Herramientas de promotor</h1></div>';
-                        echo '    <div class="barra2"></div>';
-                        echo '</section>';
-                        echo '<section class="main">';
-                        echo '    <form action="detallesEvento.php" method="post">';
-                        echo '        <input type="hidden" name="id_evento" value="'.$_SESSION['evento']->getId().'">';
-                        echo '        <div class="filaLogin">';
-                        echo '            <button type="submit" name="accion" value="modificar" class="boton">Modificar evento</button>';
-                        echo '        </div>';
-                        echo '        <div class="filaLogin">';
-                        echo '            <button type="submit" name="accion" value="borrar" class="boton">Borrar evento</button>';
-                        echo '        </div>';
-                        echo '        <div class="filaLogin">';
-                        echo '            <button type="submit" name="accion" value="añadir_actividad" class="boton">Añadir actividad</button>';
-                        echo '        </div>';
-                        echo '    </form>';
-                        echo '</section>';
+                        echo '<script>$(".evento").hide();</script>';
                     }
                 ?>
         </main>

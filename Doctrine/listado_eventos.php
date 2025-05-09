@@ -1,14 +1,11 @@
 <html lang="es">
 <?php
-    require_once 'libreria.php';
+    require_once 'eventos_controladora.php';
     session_start();
+    $controladora = new eventos_controladora();
     if ($_SERVER["REQUEST_METHOD"] == "POST") 
     {
-        $_SESSION['evento'] = $_POST['evento'];
-        if(isset($_SESSION['evento']) && $_SESSION['evento'] !== "")
-        {
-            header("Location: detallesEvento.php");
-        }
+        $controladora->procesarSeleccion($_POST);
     }
 ?>
     <head>
@@ -56,29 +53,29 @@
                 <?php
                     if(!empty($_SESSION['usuario']))
                     {
-                        $eventos = getEventos($_SESSION['usuario']->email);
+                        $eventos = $controladora->buscarEventos($_SESSION['usuario']);
                         if(!empty($eventos))
                         {
                             foreach ($eventos as $evento) {
-                                $descripcion = htmlspecialchars($evento->descripcion);
-                                $nombre = htmlspecialchars($evento->nombre);
-                                $tipo = htmlspecialchars($evento->tipo);
-                                $precio = htmlspecialchars($evento->precio);
-                                $plazas = htmlspecialchars($evento->plazas);
-                                $lugar = htmlspecialchars($evento->lugar);
-                                $fInicio = htmlspecialchars($evento->fInicio);
-                                $fFin = htmlspecialchars($evento->fFin);
+                                $descripcion = htmlspecialchars($evento->getDescripcion());
+                                $nombre = htmlspecialchars($evento->getNombre());
+                                $tipo = htmlspecialchars($evento->getTipo());
+                                $precio = htmlspecialchars($evento->getPrecio());
+                                $plazas = htmlspecialchars($evento->getPlazas());
+                                $lugar = htmlspecialchars($evento->getLugar());
+                                $fInicio = $evento->getFechaInicio();
+                                $fFin = $evento->getFechaFin();
                                     
                                 echo '<article class="evento">';
                                 echo '    <div class="fila">';
                                 echo '        <div>';
                                 echo '            <div class="tituloEvento">' . $nombre . '</div>';
                                 echo '            <div class="descEvento"> Categoria: ' . $tipo . '</div>';
-                                echo '            <div class="descEvento"> Gestionado por: ' . $_SESSION['usuario']->nombre . '</div>';
-                                echo '            <div class="fecha">Fecha inicio: ' . $fInicio . '    hasta: ' . $fFin . '</div>';
+                                echo '            <div class="descEvento"> Gestionado por: ' . $_SESSION['usuario']->getNombre() . '</div>';
+                                echo '            <div class="fecha">Fecha inicio: ' . $fInicio->format('Y-m-d') . '    hasta: ' . $fFin->format('Y-m-d') . '</div>';                                
                                 echo '        </div>';
                                 echo '        <form method="post" action="listado_eventos.php">';
-                                echo '            <input type="hidden" name="evento" value="' . $evento->idEvento . '">';
+                                echo '            <input type="hidden" name="evento" value="' . $evento->getId() . '">';
                                 echo '                 <button type="submit" class="eventoBoton" name = "detalles" value = "detalles">Detalles</button>';
                                 echo '        </form>';
                                 echo '    </div>';
@@ -100,7 +97,7 @@
                     {   
                         echo "<script>$('.noSignin').hide();</script>";
                         echo "<script>$('.promotor').hide();</script>";
-                        if($_SESSION['usuario']->rol === "promotor")
+                        if($_SESSION['usuario']->getRol() === "promotor")
                         {
                             echo "<script>$('.promotor').show();</script>";
                         }
@@ -117,31 +114,32 @@
                 <div id="titulo"><h1>Listado de Eventos</h1></div>
                 <div class="barra2"></div>
                 <?php
-                    $eventos = getAllEventos();
+                    $eventos = $controladora->getEventos();
 
                     if(!empty($eventos))
                     {
-                        foreach ($eventos as $evento) {
-                            $descripcion = htmlspecialchars($evento->descripcion);
-                            $nombre = htmlspecialchars($evento->nombre);
-                            $tipo = htmlspecialchars($evento->tipo);
-                            $precio = htmlspecialchars($evento->precio);
-                            $plazas = htmlspecialchars($evento->plazas);
-                            $lugar = htmlspecialchars($evento->lugar);
-                            $fInicio = htmlspecialchars($evento->fInicio);
-                            $fFin = htmlspecialchars($evento->fFin);
+                        foreach ($eventos as $evento) 
+                        {
+                            $descripcion = htmlspecialchars($evento->getDescripcion());
+                            $nombre = htmlspecialchars($evento->getNombre());
+                            $tipo = htmlspecialchars($evento->getTipo());
+                            $precio = htmlspecialchars($evento->getPrecio());
+                            $plazas = htmlspecialchars($evento->getPlazas());
+                            $lugar = htmlspecialchars($evento->getLugar());
+                            $fInicio = $evento->getFechaInicio();
+                            $fFin = $evento->getFechaFin();
                                 
                             echo '<article class="evento">';
                             echo '    <div class="fila">';
                             echo '        <div>';
                             echo '            <div class="tituloEvento">' . $nombre . '</div>';
                             echo '            <div class="descEvento"> Categoria: ' . $tipo . '</div>';
-                            echo '            <div class="fecha">Fecha inicio: ' . $fInicio . '    hasta: ' . $fFin . '</div>';
+                            echo '            <div class="fecha">Fecha inicio: ' . $fInicio->format('Y-m-d') . '    hasta: ' . $fFin->format('Y-m-d') . '</div>';
                             echo '        </div>';
                             if(!empty($_SESSION['usuario']))
                             {
                                 echo '        <form method="post" action="listado_eventos.php">';
-                                echo '            <input type="hidden" name="evento" value="' . $evento->idEvento . '">';
+                                echo '            <input type="hidden" name="evento" value="' . $evento->getId() . '">';
                                 echo '                 <button type="submit" class="eventoBoton" name = "detalles" value = "detalles">Detalles</button>';
                                 echo '        </form>';
                             }

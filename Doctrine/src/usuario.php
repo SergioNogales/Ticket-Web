@@ -1,6 +1,5 @@
 <?php
     use Doctrine\ORM\Mapping as ORM;
-    use Doctrine\ORM\EntityManagerInterface;
     
     /**
      * @ORM\Entity
@@ -54,17 +53,12 @@
         /**
          * @ORM\Column(type="string", length=20, nullable=true)
          */
-        private $tarjeta;
+        private $numTarjeta;
 
         /**
-         * @ORM\Column(type="string", length=2, nullable=true)
+         * @ORM\Column(type="date", nullable=true)
          */
-        private $mesCaducidad;
-
-        /**
-         * @ORM\Column(type="string", length=4, nullable=true)
-         */
-        private $yearCaducidad;
+        private $fechaCaducidad;
 
         /**
          * @ORM\Column(type="string", length=3, nullable=true)
@@ -77,7 +71,7 @@
         private $saldo = 0;
 
         public function __construct(
-            string $email = "", string $password = "", string $rol = "cliente", string $telefono = "", string $direccion = "", string $localidad = "", string $nombre = "", string $codigoPostal = "", string $tarjeta = "", string $mesCaducidad = "", string $yearCaducidad = "", string $ccv = "", float $saldo = 0) 
+            string $email = "", string $password = "", string $rol = "cliente", string $telefono = "", string $direccion = "", string $localidad = "", string $nombre = "", string $codigoPostal = "", string $numTarjeta = "", DateTime $fechaCaducidad = null, string $ccv = "", float $saldo = 0) 
         {
             $this->email = $email;
             $this->password = $password;
@@ -87,9 +81,8 @@
             $this->localidad = $localidad;
             $this->nombre = $nombre;
             $this->codigoPostal = $codigoPostal;
-            $this->tarjeta = $tarjeta;
-            $this->mesCaducidad = $mesCaducidad;
-            $this->yearCaducidad = $yearCaducidad;
+            $this->numTarjeta = $numTarjeta;
+            $this->fechaCaducidad = $fechaCaducidad;
             $this->ccv = $ccv;
             $this->saldo = $saldo;
         }
@@ -110,7 +103,7 @@
             return $this->rol;
         }
 
-        public function setRoles(string $rol): self
+        public function setRol(string $rol): self
         {
             $this->rol = $rol;
             return $this;
@@ -182,36 +175,25 @@
             return $this;
         }
 
-        public function getTarjeta(): ?string
+        public function getNumTarjeta(): ?string
         {
-            return $this->tarjeta;
+            return $this->numTarjeta;
         }
 
-        public function setTarjeta(?string $tarjeta): self
+        public function setNumTarjeta(?string $numTarjeta): self
         {
-            $this->tarjeta = $tarjeta;
+            $this->numTarjeta = $numTarjeta;
             return $this;
         }
 
-        public function getMesCaducidad(): ?string
+        public function getFechaCaducidad(): ?DateTime
         {
-            return $this->mesCaducidad;
+            return $this->fechaCaducidad;
         }
 
-        public function setMesCaducidad(?string $mesCaducidad): self
+        public function setFechaCaducidad(?DateTime $fechaCaducidad): self
         {
-            $this->mesCaducidad = $mesCaducidad;
-            return $this;
-        }
-
-        public function getYearCaducidad(): ?string
-        {
-            return $this->yearCaducidad;
-        }
-
-        public function setYearCaducidad(?string $yearCaducidad): self
-        {
-            $this->yearCaducidad = $yearCaducidad;
+            $this->fechaCaducidad = $fechaCaducidad;
             return $this;
         }
 
