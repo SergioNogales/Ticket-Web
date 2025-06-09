@@ -1,70 +1,17 @@
 <html lang="es">
 
 <?php
-    require_once 'libreria.php';
+    require_once 'eventos_controladora.php';
     session_start();
+    $controladora = new eventos_controladora();
     $success = false;
+    $errores = [];
     
     if ($_SERVER["REQUEST_METHOD"] == "POST") 
     {
-        $nombre = trim($_POST["nombre"] ?? '');
-        $ubicacion = trim($_POST["ubicacion"] ?? '');
-        $descripcion = trim($_POST["descripcion"] ?? '');
-        $precio = trim($_POST["precio"] ?? '');
-        $numEntrada = trim($_POST["numEntrada"] ?? '');
-        $tipo = trim($_POST["tipo"] ?? '');
-        $errores = [];
-
-        if(empty($nombre)) 
-        {
-            $errores['nombre'] = "El campo del nombre del evento está vacío.";
-        }
-        
-        if(empty($ubicacion)) 
-        {
-            $errores['ubicacion']= "El campo de la ubicación del evento está vacío.";
-        }
-        
-        if(empty($descripcion)) 
-        {
-            $errores['descripcion'] = "El campo de la descripción del evento está vacío.";
-        } 
-        
-        if(empty($precio)) 
-        {
-            $errores['precio'] = "El campo del precio de cada entrada está vacío.";
-        } 
-        elseif(!is_numeric($precio) || $precio <= 0) 
-        {
-            $errores['precio'] = "El precio debe ser un número positivo.";
-        }
-        
-        if(empty($numEntrada))
-        {
-            $errores['numEntrada'] = "El campo del número de entradas está vacío.";
-        } 
-        elseif(!is_numeric($numEntrada) || $numEntrada <= 0) 
-        {
-            $errores['numEntrada'] = "El número de plazas debe ser un número positivo.";
-        }
-        
-        if(empty($tipo)) 
-        {
-            $errores['tipo'] = "El campo del tipo de evento está vacío.";
-        } 
-        elseif(!in_array($tipo, ['concierto', 'cine', 'prueba deportiva', 'exposicion'])) 
-        {
-            $errores['tipo']  = "El tipo de evento debe ser concierto, cine, prueba deportiva o exposicion.";
-        } 
-        if($errores === []) 
-        {
-            $success = true;
-            addEvento($_POST['nombre'], $_POST['descripcion'], $_POST['tipo'], $_POST['numEntrada'], $_POST['precio'], $_POST['ubicacion'], "2025-01-01", "2025-02-01", $_SESSION['usuario']);
-        }
-        else
-        {
-            $success = false;
-        }
+        $resultado = $controladora->procesarCreacion($_POST);
+        $errores = $resultado['errores'];
+        $success = $resultado['success'];
     }
 ?>
 
@@ -145,6 +92,14 @@
                             <div class="field"><input type="text" id="tipo" name="tipo"></textarea></div>
                         </div>
                         <div class="filaLogin">
+                            <div class="label">Fecha Inicio</div>
+                            <div class="field"><input type="date" id="fInicio" name="fInicio"></input></div>
+                        </div>
+                        <div class="filaLogin">
+                            <div class="label">Fecha Fin</div>
+                            <div class="field"><input type="date" id="fFin" name="fFin"></input></div>
+                        </div>
+                        <div class="filaLogin">
                             <button id="updateSend" class="boton">Crear</button>
                         </div>
                         <script>
@@ -199,7 +154,7 @@
                     <li><a class="ignoreLink" href="login.php">Iniciar sesión</a></li>
                     <a class="ignoreLink" href="editar_usuario.php"><li>Editar perfil</li></a>
                     <a class="ignoreLink" href="#"><li>Eventos favoritos</li></a>
-                    <a class="ignoreLink" href="ticket.php"><li>Eventos Inscritos</li></a>
+                    <a class="ignoreLink" href="listado_eventos.php"><li>Eventos Inscritos</li></a>
                 </div>
                 <div>
                     <h1>Promotor</h1>
@@ -220,7 +175,7 @@
         if(!empty($_SESSION['usuario']))
         {
             $tempUser = $_SESSION['usuario'];
-            if($tempUser->rol === 'promotor')
+            if($tempUser->getRol() === 'promotor')
             {
                 echo "<script>$('.none').hide();</script>";
             }

@@ -41,6 +41,13 @@ html, body {
     padding: 10px;
 }
 
+.alerta_Saldo{
+    background-color: rgb(167, 144, 144);
+    color: rgb(97, 52, 52);
+    border-radius: 2px;
+    padding: 10px;
+}
+
 .alerta_exito {
     background-color: rgb(144, 167, 144);
     color: rgb(52, 97, 58);

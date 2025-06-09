@@ -1,47 +1,17 @@
 <html lang="es">
 
 <?php
-require_once 'libreria.php';
+require_once 'login_controladora.php';
 session_start();
 $errorLogin = '';
 $success = false;
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") 
-{
-    $email = trim($_POST["email"]);
-    $password = trim($_POST["password"]);
-
-    if(empty($email))
-    {
-        $errorLogin = "El campo email está vacio.";
-    }
-    if($password === '')
-    {
-        $errorLogin = "El campo contraseña está vacio.";
-    }
-
-    $usuario = buscarUsuario($email);
-
-    if(!empty($usuario))
-    {
-        if ($usuario->getEmail === $email)
-        {
-            if ($password === $usuario->getPassword) 
-            {
-                $_SESSION["usuario"] = $usuario;
-                $success = true;
-            } 
-            else 
-            {
-                $errorLogin = "Contraseña incorrecta.";
-            }
-        }
-    }
-    else
-    {
-        $errorLogin = "Usuario no encontrado.";
-    }
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $controladora = new login_controladora();
+    $resultado = $controladora->procesarLogin($_POST);
     
+    $errorLogin = $resultado['error'] ?? '';
+    $success = $resultado['success'] ?? false;
 }
 ?>
 
@@ -168,7 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                     <li><a class="ignoreLink" href="login.php">Iniciar sesión</a></li>
                     <a class="ignoreLink" href="editar_usuario.php"><li>Editar perfil</li></a>
                     <a class="ignoreLink" href="#"><li>Eventos favoritos</li></a>
-                    <a class="ignoreLink" href="ticket.php"><li>Eventos Inscritos</li></a>
+                    <a class="ignoreLink" href="listado_eventos.php"><li>Eventos Inscritos</li></a>
                 </div>
                 <div>
                     <h1>Promotor</h1>

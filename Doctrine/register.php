@@ -1,46 +1,18 @@
 <html lang="es">
 
 <?php
-require_once 'libreria.php';
+require_once 'register_controladora.php';
 session_start();
 $errorSignin = '';
 $success = false;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-    $email = trim($_POST["email"]);
-    $password = trim($_POST["password"]);
-    $confirmPassword = trim($_POST["newpassword"]);
-
-    $usuarios = getUsuarios();
-
-    foreach ($usuarios as $usuario) 
-    {
-        if ($usuario->email === $email) 
-        {
-            $errorSignin = "El correo ya está registrado.";
-        }
-    }
-
-    if (empty($email)) 
-    {
-        $errorSignin = "El campo email está vacío.";
-    } 
-    elseif (empty($password) || empty($confirmPassword)) 
-    {
-        $errorSignin = "Los campos de contraseña están vacíos.";
-    } 
-    elseif ($password !== $confirmPassword) 
-    {
-        $errorSignin = "Las contraseñas no coinciden.";
-    } 
-
-    if (!$errorSignin) 
-    {
-        $nuevoUsuario = new usuario($email, $password, "cliente", trim($_POST["telephone"]), trim($_POST["direccion"]), trim($_POST["localidad"]), trim($_POST["name"]), trim($_POST["codigo_postal"]), trim($_POST["tarjeta"]), trim($_POST["mes_caducidad"]), trim($_POST["year_caducidad"]), trim($_POST["ccv"]));
-        registrarUsuario($nuevoUsuario);
-        $success = true;
-    }
+    $controladora = new register_controladora();
+    $resultado = $controladora->procesarRegistro($_POST);
+    
+    $errorSignin = $resultado['error'] ?? '';
+    $success = $resultado['success'] ?? false;
 }
 ?>
 
@@ -132,10 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                         </div>
                         <div class="filaLogin">
                             <div class="label">Fecha de Caducidad</div>
-                            <div class="field">
-                                <input type="number" id="mes_caducidad" name="mes_caducidad" placeholder="Mes" style="width: 60px;">
-                                <input type="number" id="año_caducidad" name="year_caducidad" placeholder="Año" >
-                            </div>
+                            <div class="field"><input type="date" id="fecha" name="fecha"></div>
                         </div>
                         <div class="filaLogin">
                             <div class="label">CCV</div>
@@ -190,12 +159,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                                             error = true;
                                             $('<li>').html("La tarjeta de crédito introducida no es válida").appendTo(listaErrores);
                                         }
-
-                                        if( $('#newpasswordSignin').val() != $('#passwordSignin').val()) 
-                                        {
-                                            error = true;
-                                            $('<li>').html("Las contraseñas son distintas").appendTo(listaErrores);
-                                        }
                         
                                         if( error ) 
                                         {
@@ -234,7 +197,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                     <li><a class="ignoreLink" href="login.php">Iniciar sesión</a></li>
                     <a class="ignoreLink" href="editar_usuario.php"><li>Editar perfil</li></a>
                     <a class="ignoreLink" href="#"><li>Eventos favoritos</li></a>
-                    <a class="ignoreLink" href="ticket.php"><li>Eventos Inscritos</li></a>
+                    <a class="ignoreLink" href="listado_eventos.php"><li>Eventos Inscritos</li></a>
                 </div>
                 <div>
                     <h1>Promotor</h1>
