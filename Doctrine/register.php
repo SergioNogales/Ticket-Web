@@ -104,10 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                         </div>
                         <div class="filaLogin">
                             <div class="label">Fecha de Caducidad</div>
-                            <div class="field">
-                                <input type="number" id="mes_caducidad" name="mes_caducidad" placeholder="Mes" style="width: 60px;">
-                                <input type="number" id="año_caducidad" name="year_caducidad" placeholder="Año" >
-                            </div>
+                            <div class="field"><input type="date" id="fecha" name="fecha"></div>
                         </div>
                         <div class="filaLogin">
                             <div class="label">CCV</div>
@@ -162,12 +159,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                                             error = true;
                                             $('<li>').html("La tarjeta de crédito introducida no es válida").appendTo(listaErrores);
                                         }
-
-                                        if( $('#newpasswordSignin').val() != $('#passwordSignin').val()) 
-                                        {
-                                            error = true;
-                                            $('<li>').html("Las contraseñas son distintas").appendTo(listaErrores);
-                                        }
                         
                                         if( error ) 
                                         {
@@ -206,7 +197,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                     <li><a class="ignoreLink" href="login.php">Iniciar sesión</a></li>
                     <a class="ignoreLink" href="editar_usuario.php"><li>Editar perfil</li></a>
                     <a class="ignoreLink" href="#"><li>Eventos favoritos</li></a>
-                    <a class="ignoreLink" href="ticket.php"><li>Eventos Inscritos</li></a>
+                    <a class="ignoreLink" href="listado_eventos.php"><li>Eventos Inscritos</li></a>
                 </div>
                 <div>
                     <h1>Promotor</h1>

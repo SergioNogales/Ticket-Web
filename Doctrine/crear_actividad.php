@@ -88,8 +88,12 @@
                             <div class="field"><input type="number" id="plazas" name="plazas" min="1"></input></div>
                         </div>
                         <div class="filaLogin">
-                            <div class="label">Fecha y hora</div>
+                            <div class="label">Fecha</div>
                             <div class="field"><input type="date" id="fecha" name="fecha"></input></div>
+                        </div>
+                        <div class="filaLogin">
+                            <div class="label">Hora</div>
+                            <div class="field"><input type="time" id="hora" name="hora"></div>
                         </div>
                         <div class="filaLogin">
                             <button id="updateSend" class="boton">Añadir Actividad</button>

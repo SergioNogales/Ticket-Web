@@ -46,6 +46,11 @@ class Actividad
     private $fecha;
 
     /**
+     * @ORM\Column(type="time", nullable=false)
+     */
+    private $hora;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Evento")
      * @ORM\JoinColumn(name="Evento_idEvento", referencedColumnName="idEvento", nullable=false)
      */
@@ -122,7 +127,18 @@ class Actividad
 
     public function setFecha(DateTime $fecha): self
     {
-        $this->fecha = $fecha;
+        $this->fecha = $fecha; 
+        return $this;
+    }
+
+    public function getHora(): ?DateTime
+    {
+        return $this->hora;
+    }
+
+    public function setHora(DateTime $hora): self
+    {
+        $this->hora = $hora;
         return $this;
     }
 

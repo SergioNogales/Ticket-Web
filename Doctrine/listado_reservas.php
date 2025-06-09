@@ -1,8 +1,8 @@
 <html lang="es">
 <?php
-    require_once 'eventos_controladora.php';
+    require_once 'reserva_controladora.php';
     session_start();
-    $controladora = new eventos_controladora();
+    $controladora = new reserva_controladora();
     if ($_SERVER["REQUEST_METHOD"] == "POST") 
     {
         $controladora->procesarSeleccion($_POST);
@@ -43,20 +43,22 @@
             <section class="noSignin">
                 <div class="noneContenedor">
                     <div class="alerta_Login">
-                        <h1>Debe iniciar sesión previo al acceso a eventos</h1>
+                        <h1>Debe iniciar sesión previo al acceso a tus reservas</h1>
                     </div>
                 </div>
             </section>
-            <section class="main eventos promotor">
-                <div id="titulo"><h1>Vista de Promotor - Mis Eventos</h1></div>
+            <section class="main eventos reservas">
+                <div id="titulo"><h1>Mis Reservas</h1></div>
                 <div class="barra2"></div>
                 <?php
                     if(!empty($_SESSION['usuario']))
                     {
-                        $eventos = $controladora->buscarEventos($_SESSION['usuario']);
-                        if(!empty($eventos))
+                        $reservas = $controladora->getControladora()->buscarReservas($_SESSION['usuario']->getEmail());
+                        if(!empty($reservas))
                         {
-                            foreach ($eventos as $evento) {
+                            foreach ($reservas as $reserva) 
+                            {
+                                $evento = $reserva->getEvento();
                                 $descripcion = htmlspecialchars($evento->getDescripcion());
                                 $nombre = htmlspecialchars($evento->getNombre());
                                 $tipo = htmlspecialchars($evento->getTipo());
@@ -71,11 +73,11 @@
                                 echo '        <div>';
                                 echo '            <div class="tituloEvento">' . $nombre . '</div>';
                                 echo '            <div class="descEvento"> Categoria: ' . $tipo . '</div>';
-                                echo '            <div class="descEvento"> Gestionado por: ' . $_SESSION['usuario']->getNombre() . '</div>';
+                                echo '            <div class="descEvento"> Entrada de: ' . $reserva->getNombre() . '</div>';
                                 echo '            <div class="fecha">Fecha inicio: ' . $fInicio->format('Y-m-d') . '    hasta: ' . $fFin->format('Y-m-d') . '</div>';                                
                                 echo '        </div>';
-                                echo '        <form method="post" action="listado_eventos.php">';
-                                echo '            <input type="hidden" name="evento" value="' . $evento->getId() . '">';
+                                echo '        <form method="post" action="listado_reservas.php">';
+                                echo '            <input type="hidden" name="reserva" value="' . $reserva->getId() . '">';
                                 echo '                 <button type="submit" class="eventoBoton" name = "detalles" value = "detalles">Detalles</button>';
                                 echo '        </form>';
                                 echo '    </div>';
@@ -86,76 +88,19 @@
                         {
                             echo    '<div class="noneContenedor">';
                             echo        '<div class="alerta_Login">';
-                            echo            '<h1>Usted no tiene eventos.</h1>';
+                            echo            '<h1>Usted no tiene reservas.</h1>';
                             echo        '</div>';
                             echo    '</div>';
-                        }
-                    }
-                ?>
-                <?php
-                    if(!empty($_SESSION['usuario']))
-                    {   
+                        }  
+
                         echo "<script>$('.noSignin').hide();</script>";
-                        echo "<script>$('.promotor').hide();</script>";
-                        if($_SESSION['usuario']->getRol() === "promotor")
-                        {
-                            echo "<script>$('.promotor').show();</script>";
-                        }
+                        echo "<script>$('.reservas').show();</script>";
                     }
                     else
                     {
-                        echo "<script>$('.promotor').hide();</script>";
+                        echo "<script>$('.reservas').hide();</script>";
                         echo "<script>$('.noSignin').show();</script>";
                     }
-                ?>
-            </section>
-
-            <section class="main eventos">
-                <div id="titulo"><h1>Listado de Eventos</h1></div>
-                <div class="barra2"></div>
-                <?php
-                    $eventos = $controladora->getEventos();
-
-                    if(!empty($eventos))
-                    {
-                        foreach ($eventos as $evento) 
-                        {
-                            $descripcion = htmlspecialchars($evento->getDescripcion());
-                            $nombre = htmlspecialchars($evento->getNombre());
-                            $tipo = htmlspecialchars($evento->getTipo());
-                            $precio = htmlspecialchars($evento->getPrecio());
-                            $plazas = htmlspecialchars($evento->getPlazas());
-                            $lugar = htmlspecialchars($evento->getLugar());
-                            $fInicio = $evento->getFechaInicio();
-                            $fFin = $evento->getFechaFin();
-                                
-                            echo '<article class="evento">';
-                            echo '    <div class="fila">';
-                            echo '        <div>';
-                            echo '            <div class="tituloEvento">' . $nombre . '</div>';
-                            echo '            <div class="descEvento"> Categoria: ' . $tipo . '</div>';
-                            echo '            <div class="fecha">Fecha inicio: ' . $fInicio->format('Y-m-d') . '    hasta: ' . $fFin->format('Y-m-d') . '</div>';
-                            echo '        </div>';
-                            if(!empty($_SESSION['usuario']))
-                            {
-                                echo '        <form method="post" action="listado_eventos.php">';
-                                echo '            <input type="hidden" name="evento" value="' . $evento->getId() . '">';
-                                echo '            <button type="submit" class="eventoBoton" name = "detalles" value = "detalles">Detalles</button>';
-                                echo '        </form>';
-                            }
-                            echo '    </div>';
-                            echo '</article>';
-                        }
-                    }
-                    else
-                    {
-                        echo    '<div class="noneContenedor">';
-                        echo        '<div class="alerta_Login">';
-                        echo            '<h1>No existen eventos anunciados.</h1>';
-                        echo        '</div>';
-                        echo    '</div>';
-                    }
-
                 ?>
             </section>
         </main>

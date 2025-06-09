@@ -9,6 +9,11 @@ class register_controladora {
         $this->controladoraDoctrine = new controladoraDoctrine();
     }
 
+    public function getControladora()
+    {
+        return $this->controladoraDoctrine;
+    }
+
     public function procesarRegistro($datosFormulario) 
     {
         $email = trim($datosFormulario["email"]);
@@ -38,8 +43,11 @@ class register_controladora {
             if (empty($usuario)) 
             {
 
-                $fechaCaducidad = new DateTime($datosFormulario["year_caducidad"].'-'.$datosFormulario["mes_caducidad"].'-01');
-                $this->controladoraDoctrine->addUsuario($email, $password, $datosFormulario["telephone"], $datosFormulario["direccion"], $datosFormulario["localidad"], $datosFormulario["name"], $datosFormulario["codigo_postal"], $datosFormulario["tarjeta"], $fechaCaducidad, $datosFormulario["ccv"]);
+                $fechaCaducidad = new \DateTime($datosFormulario["fecha"]);
+                $password = $this->getControladora()->getHash($password);
+                $ccv = $this->getControladora()->cifrar(trim($datosFormulario["ccv"]), "ccv");
+                $tarjeta = $this->getControladora()->cifrar(trim($datosFormulario["tarjeta"]), "tarjeta");
+                $this->controladoraDoctrine->addUsuario($email, $password, $datosFormulario["telephone"], $datosFormulario["direccion"], $datosFormulario["localidad"], $datosFormulario["name"], $datosFormulario["codigo_postal"], $tarjeta, $fechaCaducidad, $ccv);
                 return ['success' => true];
             } 
             else 

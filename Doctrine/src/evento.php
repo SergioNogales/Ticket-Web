@@ -65,8 +65,6 @@ class Evento
     {
     }
 
-    // Getters y Setters para cada propiedad
-
     public function getId(): ?int
     {
         return $this->id;

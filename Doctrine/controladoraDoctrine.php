@@ -10,6 +10,29 @@ class controladoraDoctrine {
         $this->entityManager = require "C:/xampp\htdocs\DWII\p3\bootstrap.php";
     }
 
+    public function getHash($contraseña) 
+    {
+        $hash = hash('sha512', $contraseña."salt");
+        return $hash;
+    }
+
+    function cifrar($texto, $clave) 
+    {
+        $iv = openssl_random_pseudo_bytes(16);
+        $claveHash = hash('sha256', $clave, true);
+        $textoCifrado = base64_encode($iv . openssl_encrypt($texto, 'aes-256-cbc', $claveHash, 0, $iv));
+        return $textoCifrado;
+    }
+
+    function descifrar($texto, $clave) 
+    {
+        $datos = base64_decode($texto);
+        $iv = substr($datos, 0, 16);
+        $claveHash = hash('sha256', $clave, true);
+        $textoPlano = openssl_decrypt(substr($datos, 16), 'aes-256-cbc', $claveHash, 0, $iv);
+        return $textoPlano;
+    }
+
     public function buscarUsuario($email) 
     {
         $usuarioRepository = $this->entityManager->getRepository(Usuario::class);
@@ -66,7 +89,7 @@ class controladoraDoctrine {
     public function buscarActividades(Evento $evento)
     {
         $actividadRepository = $this->entityManager->getRepository(Actividad::class);
-        $actividades = $actividadRepository->findBy(['evento' => $evento]);
+        $actividades = $actividadRepository->findBy(['evento' => $evento], ['orden' => 'ASC']);
         return $actividades;
     }
 
@@ -75,6 +98,38 @@ class controladoraDoctrine {
         $actividadRepository = $this->entityManager->getRepository(Actividad::class);
         $actividad = $actividadRepository->findOneBy(['id' => $id]);
         return $actividad;
+    }
+    
+    public function getPlazas($id)
+    {
+        $reservaRepository = $this->entityManager->getRepository(Reserva::class);
+        $reservas = $reservaRepository->findBy(['evento' => $id]);
+        if(!empty($reservas))
+        {
+            return count($reservas);
+        }
+        return 0;
+    }
+
+    public function buscarReserva($id)
+    {
+        $reservaRepository = $this->entityManager->getRepository(Reserva::class);
+        $reservas = $reservaRepository->findOneBy(['id' => $id, 'cancelado' => false, 'asistencia' => false]);
+        return $reservas;
+    }
+
+    public function buscarReservas($email)
+    {
+        $reservaRepository = $this->entityManager->getRepository(Reserva::class);
+        $reservas = $reservaRepository->findBy(['usuario' => $email, 'cancelado' => false, 'asistencia' => false]);
+        return $reservas; 
+    }
+
+    public function buscarReservaActividad($id)
+    {
+        $actividadRepository = $this->entityManager->getRepository(ReservaActividades::class);
+        $actividades = $actividadRepository->findOneBy(['id' => $id, 'cancelado' => false, 'asistencia' => false]);
+        return $actividades;
     }
 
     public function addSolicitud($rolSolicitado, $usuario)
@@ -118,7 +173,7 @@ class controladoraDoctrine {
         $this->entityManager->flush();
     }
 
-    public function addActividad(Evento $evento, string $nombre, ?string $descripcion, int $orden, int $plazas, string $lugar, DateTime $fecha)
+    public function addActividad(Evento $evento, string $nombre, ?string $descripcion, int $orden, int $plazas, string $lugar, DateTime $fecha, Datetime $hora)
     {
         $idEvento = $evento->getId();
         $evento = $this->buscarEvento($idEvento);
@@ -131,12 +186,13 @@ class controladoraDoctrine {
         $actividad->setLugar($lugar);
         $actividad->setFecha($fecha);
         $actividad->setEvento($evento);
+        $actividad->setHora($hora);
 
         $this->entityManager->persist($actividad);
         $this->entityManager->flush();
     }
 
-    public function addReserva(Usuario $usuario, Evento $evento)
+    public function addReserva(Usuario $usuario, Evento $evento, $dni, $nombre, $edad)
     {
         $email = $usuario->getEmail();
         $usuario = $this->buscarUsuario($email);
@@ -148,13 +204,36 @@ class controladoraDoctrine {
         $reserva->setFecha(new \DateTime());
         $reserva->setUsuario($usuario);
         $reserva->setEvento($evento);
+        $reserva->setDni($dni);
+        $reserva->setNombre($nombre);
+        $reserva->setEdad($edad);
+        $reserva->setCancelado(false);
+        $reserva->setAsistido(false);
         
         $this->entityManager->persist($reserva);
         $this->entityManager->flush();
         $_SESSION["reserva"] = $reserva;
     }
 
-    public function actualizarActividad($id, string $nombre, ?string $descripcion, int $orden, int $plazas, string $lugar, DateTime $fecha)
+    public function addReservaActividad(Actividad $actividad_, Reserva $reserva_)
+    {
+        $actividad = $this->buscarActividad($actividad_->getId());
+        $reserva = $this->buscarReserva($reserva_->getId());
+
+        $reservaActividad = new ReservaActividades();
+        $reservaActividad->setActividad($actividad);
+        $reservaActividad->setReserva($reserva);
+        $reservaActividad->setFechaCreacion(new \DateTime());
+        $reservaActividad->setCancelado(false);
+        $reservaActividad->setAsistido(false);
+
+        $this->entityManager->persist($reservaActividad);
+        $this->entityManager->flush();
+        
+        $_SESSION["reservaActividad"] = $reservaActividad;
+    }
+
+    public function actualizarActividad($id, string $nombre, ?string $descripcion, int $orden, int $plazas, string $lugar, DateTime $fecha, DateTime $hora)
     {
         $actividad = $this->buscarActividad($id);
         $actividad->setNombre($nombre);
@@ -163,6 +242,7 @@ class controladoraDoctrine {
         $actividad->setPlazas($plazas);
         $actividad->setLugar($lugar);
         $actividad->setFecha($fecha);
+        $actividad->setHora($hora);
 
         $this->entityManager->persist($actividad);
         $this->entityManager->flush();
@@ -185,6 +265,16 @@ class controladoraDoctrine {
 
         $this->entityManager->persist($usuario);
         $this->entityManager->flush();
+    }
+
+    public function actualizarSaldo($email, $nuevoSaldo)
+    {
+        $usuario = $this->buscarUsuario($email);
+        $usuario->setSaldo($nuevoSaldo);
+
+        $this->entityManager->persist($usuario);
+        $this->entityManager->flush();
+        $_SESSION['usuario'] = $usuario;
     }
 
     public function actualizarEvento(string $id, string $nombre, ?string $descripcion, string $tipo, int $plazas, float $precio, string $lugar, DateTime $fechaInicio, DateTime $fechaFin, Usuario $usuario): void 
@@ -256,12 +346,26 @@ class controladoraDoctrine {
         $reserva = $reservaRepository->findOneBy(['id' => $id]);
         if(!empty($reserva))
         {
-            $this->entityManager->remove($reserva);
+            $reserva->setCancelado(true);
+            $this->entityManager->persist($reserva);
             $this->entityManager->flush();
             return true;
         }
         return false;
     }
 
+    public function deleteReservaActividad($id)
+    {
+        $reservaRepository = $this->entityManager->getRepository(ReservaActividades::class);
+        $reserva = $reservaRepository->findOneBy(['id' => $id]);
+        if(!empty($reserva))
+        {
+            $reserva->setCancelado(true);
+            $this->entityManager->persist($reserva);
+            $this->entityManager->flush();
+            return true;
+        }
+        return false;
+    }
 }
 ?>

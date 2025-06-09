@@ -37,12 +37,36 @@ class Reserva
      */
     private $evento;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    private $cancelado;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    private $asistencia;
+
+    /**
+     * @ORM\Column(type="string", length=9, nullable=false)
+     */
+    private $dni;
+
+    /**
+     * @ORM\Column(type="string", length=45, nullable=false)
+     */
+    private $nombre;
+
+    /**
+     * @ORM\Column(type="integer", nullable=false)
+     */
+    private $edad;
+
     public function __construct()
     {
         $this->fecha = new DateTime();
         $this->pagado = false;
     }
-
 
     public function getId(): ?int
     {
@@ -90,6 +114,56 @@ class Reserva
     public function setEvento(Evento $evento): self
     {
         $this->evento = $evento;
+        return $this;
+    }
+
+    public function getDni(): ?String
+    {
+        return $this->dni;
+    }
+
+    public function setDni(string $dni): self
+    {
+        $this->dni = $dni;
+        return $this;
+    }
+
+    public function getNombre(): ?String
+    {
+        return $this->nombre;
+    }
+
+    public function setNombre(string $nombre): self
+    {
+        $this->nombre = $nombre;
+        return $this;
+    }
+
+    public function getCancelado(): ?bool
+    {
+        return $this->cancelado;
+    }
+
+    public function setCancelado(bool $cancelado): self
+    {
+        $this->cancelado = $cancelado;
+        return $this;
+    }
+
+    public function setAsistido(bool $asistido): self
+    {
+        $this->asistencia = $asistido;
+        return $this;
+    }
+
+    public function getEdad(): ?int
+    {
+        return $this->edad;
+    }
+
+    public function setEdad(int $edad): self
+    {
+        $this->edad = $edad;
         return $this;
     }
 }

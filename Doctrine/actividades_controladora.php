@@ -32,6 +32,7 @@ class actividades_controladora {
         $orden = trim($datosFormulario["orden"] ?? '');
         $plazas = trim($datosFormulario["plazas"] ?? '');
         $fecha = new \DateTime($datosFormulario['fecha']);
+        $hora =  \DateTime::createFromFormat('H:i', $datosFormulario['hora']);
         $errores = [];
         $success = false;
 
@@ -72,12 +73,17 @@ class actividades_controladora {
         {
             $errores['fecha'] = "El campo de la fecha está vacío.";
         }
+
+        if(empty($hora)) 
+        {
+            $errores['hora'] = "El campo de la hora está vacío.";
+        }
         
         if($errores === []) 
         {
             $success = true;
             $tempEvent = $_SESSION['evento'];
-            $this->getControladora()->addActividad($tempEvent, $nombre, $descripcion, $orden, $plazas, $lugar, $fecha);
+            $this->getControladora()->addActividad($tempEvent, $nombre, $descripcion, $orden, $plazas, $lugar, $fecha, $hora);
         }
         else
         {
@@ -95,6 +101,7 @@ class actividades_controladora {
         $orden = trim($datosFormulario["orden"] ?? '');
         $plazas = trim($datosFormulario["plazas"] ?? '');
         $fecha = new \DateTime($datosFormulario['fecha']);
+        $hora = \DateTime::createFromFormat('H:i', $datosFormulario['hora']);
         $errores = [];
         $success = false;
 
@@ -135,11 +142,16 @@ class actividades_controladora {
         {
             $errores['fecha'] = "El campo de la fecha está vacío.";
         }
+
+        if(empty($hora)) 
+        {
+            $errores['hora'] = "El campo de la hora está vacío.";
+        }
         
         if($errores === []) 
         {
             $success = true;
-            $this->getControladora()->actualizarActividad($id, $nombre, $descripcion, $orden, $plazas, $lugar, $fecha);
+            $this->getControladora()->actualizarActividad($id, $nombre, $descripcion, $orden, $plazas, $lugar, $fecha, $hora);
         }
         else
         {

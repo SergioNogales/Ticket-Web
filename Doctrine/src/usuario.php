@@ -51,7 +51,7 @@
         private $codigoPostal;
 
         /**
-         * @ORM\Column(type="string", length=20, nullable=true)
+         * @ORM\Column(type="string", length=128, nullable=true)
          */
         private $numTarjeta;
 
@@ -61,7 +61,7 @@
         private $fechaCaducidad;
 
         /**
-         * @ORM\Column(type="string", length=3, nullable=true)
+         * @ORM\Column(type="string", length=128, nullable=true)
          */
         private $ccv;
 

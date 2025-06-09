@@ -9,10 +9,15 @@ class login_controladora {
         $this->controladoraDoctrine = new controladoraDoctrine();
     }
 
+    public function getControladora()
+    {
+        return $this->controladoraDoctrine;
+    }
+
     public function procesarLogin($datosFormulario) 
     {
         $email = trim($datosFormulario["email"]);
-        $password = trim($datosFormulario["password"]);
+        $password = $this->getControladora()->getHash(trim($datosFormulario["password"]));
         $error = '';
         $success = false;
         $usuario = null;

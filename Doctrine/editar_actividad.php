@@ -69,27 +69,31 @@
                         <div class="alerta_exito">La actividad se ha editado con éxito.</div>
                         <div class="filaLogin">
                             <div class="label">Nuevo Nombre</div>
-                            <div class="field"><input type="text" id="nombre" name="nombre"></input></div>
+                            <div class="field"><input type="text" id="nombre" name="nombre" value="<?= isset($_SESSION['actividad']) ? htmlspecialchars($_SESSION['actividad']->getNombre()) : '' ?>"></div>
                         </div>
                         <div class="filaLogin">
                             <div class="label">Nuevo Lugar</div>
-                            <div class="field"><input type="text" id="lugar" name="lugar"></input></div>
+                            <div class="field"><input type="text" id="lugar" name="lugar" value="<?= isset($_SESSION['actividad']) ? htmlspecialchars($_SESSION['actividad']->getLugar()) : '' ?>"></div>
                         </div>
                         <div class="filaLogin">
                             <div class="label">Nuevo Descripción</div>
-                            <div class="field"><textarea id="descripcion" name="descripcion"></textarea></div>
+                            <div class="field"><textarea id="descripcion" name="descripcion" value="<?= isset($_SESSION['actividad']) ? htmlspecialchars($_SESSION['actividad']->getDescripcion()) : '' ?>"></div>
                         </div>
                         <div class="filaLogin">
                             <div class="label">Nuevo Orden</div>
-                            <div class="field"><input type="number" id="orden" name="orden" min="1"></input></div>
+                            <div class="field"><input type="number" id="orden" name="orden" min="1" value="<?= isset($_SESSION['actividad']) ? htmlspecialchars($_SESSION['actividad']->getOrden()) : '' ?>"></div>
                         </div>
                         <div class="filaLogin">
                             <div class="label">Nuevo Número de plazas</div>
-                            <div class="field"><input type="number" id="plazas" name="plazas" min="1"></input></div>
+                            <div class="field"><input type="number" id="plazas" name="plazas" min="1" value="<?= isset($_SESSION['actividad']) ? htmlspecialchars($_SESSION['actividad']->getPlazas()) : '' ?>"></div>
                         </div>
                         <div class="filaLogin">
-                            <div class="label">Nuevo Fecha y hora</div>
-                            <div class="field"><input type="date" id="fecha" name="fecha"></input></div>
+                            <div class="label">Nueva Fecha</div>
+                            <div class="field"><input type="date" id="fecha" name="fecha" value="<?= isset($_SESSION['actividad']) ? htmlspecialchars($_SESSION['actividad']->getFecha()) : '' ?>"></div>
+                        </div>
+                        <div class="filaLogin">
+                            <div class="label">Nueva Hora</div>
+                            <div class="field"><input type="time" id="hora" name="hora"></div>
                         </div>
                         <div class="filaLogin">
                             <button id="updateSend" class="boton">Editar Actividad</button>
@@ -146,7 +150,7 @@
                     <li><a class="ignoreLink" href="login.php">Iniciar sesión</a></li>
                     <a class="ignoreLink" href="editar_usuario.php"><li>Editar perfil</li></a>
                     <a class="ignoreLink" href="#"><li>Eventos favoritos</li></a>
-                    <a class="ignoreLink" href="ticket.php"><li>Eventos Inscritos</li></a>
+                    <a class="ignoreLink" href="listado_eventos.php"><li>Eventos Inscritos</li></a>
                 </div>
                 <div>
                     <h1>Promotor</h1>

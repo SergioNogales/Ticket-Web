@@ -69,35 +69,35 @@
                         <div class="alerta_exito">El evento se ha editado con éxito.</div>
                         <div class="filaLogin">
                             <div class="label">Nuevo Nombre</div>
-                            <div class="field"><input type="text" id="nombre" name="nombre"></input></div>
+                            <div class="field"><input type="text" id="nombre" name="nombre" value="<?= isset($_SESSION['evento']) ? htmlspecialchars($_SESSION['evento']->getNombre()) : '' ?>"></div>
                         </div>
                         <div class="filaLogin">
                             <div class="label">Nueva Ubicación</div>
-                            <div class="field"><input type="text" id="ubicacion" name="ubicacion"></input></div>
+                            <div class="field"><input type="text" id="ubicacion" name="ubicacion" value="<?= isset($_SESSION['evento']) ? htmlspecialchars($_SESSION['evento']->getLugar()) : '' ?>"></div>
                         </div>
                         <div class="filaLogin">
                             <div class="label">Nueva Descripción</div>
-                            <div class="field"><textarea id="descripcion" name="descripcion"></textarea></div>
+                            <div class="field"><textarea id="descripcion" name="descripcion"><?= isset($_SESSION['evento']) ? htmlspecialchars($_SESSION['evento']->getDescripcion()) : '' ?></textarea></div>
                         </div>
                         <div class="filaLogin">
                             <div class="label">Nuevo Precio por entrada</div>
-                            <div class="field"><input type="text" id="precio" name="precio"></input></div>
+                            <div class="field"><input type="text" id="precio" name="precio" value="<?= isset($_SESSION['evento']) ? htmlspecialchars($_SESSION['evento']->getPrecio()) : '' ?>"></div>
                         </div>
                         <div class="filaLogin">
                             <div class="label">Nuevo Número de plazas</div>
-                            <div class="field"><input type="text" id="numEntrada" name="numEntrada"></input></div>
+                            <div class="field"><input type="text" id="numEntrada" name="numEntrada" value="<?= isset($_SESSION['evento']) ? htmlspecialchars($_SESSION['evento']->getPlazas()) : '' ?>"></div>
                         </div>
                         <div class="filaLogin">
                             <div class="label">Nuevo Tipo </div>
-                            <div class="field"><input type="text" id="tipo" name="tipo"></textarea></div>
+                            <div class="field"><input type="text" id="tipo" name="tipo" value="<?= isset($_SESSION['evento']) ? htmlspecialchars($_SESSION['evento']->getTipo()) : '' ?>"></div>
                         </div>
                         <div class="filaLogin">
                             <div class="label">Nueva Fecha Inicio</div>
-                            <div class="field"><input type="date" id="fInicio" name="fInicio"></input></div>
+                            <div class="field"><input type="date" id="fInicio" name="fInicio" value="<?= isset($_SESSION['evento']) ? htmlspecialchars($_SESSION['evento']->getFechaInicio()->format('Y-m-d')) : '' ?>"></div>
                         </div>
                         <div class="filaLogin">
                             <div class="label">Nueva Fecha Fin</div>
-                            <div class="field"><input type="date" id="fFin" name="fFin"></input></div>
+                            <div class="field"><input type="date" id="fInicio" name="fInicio" value="<?= isset($_SESSION['evento']) ? htmlspecialchars($_SESSION['evento']->getFechaFin()->format('Y-m-d')) : '' ?>"></div>
                         </div>
                         <div class="filaLogin">
                             <button id="updateSend" class="boton">Editar</button>
@@ -161,7 +161,7 @@
                     <li><a class="ignoreLink" href="login.php">Iniciar sesión</a></li>
                     <a class="ignoreLink" href="editar_usuario.php"><li>Editar perfil</li></a>
                     <a class="ignoreLink" href="#"><li>Eventos favoritos</li></a>
-                    <a class="ignoreLink" href="ticket.php"><li>Eventos Inscritos</li></a>
+                    <a class="ignoreLink" href="listado_eventos.php"><li>Eventos Inscritos</li></a>
                 </div>
                 <div>
                     <h1>Promotor</h1>

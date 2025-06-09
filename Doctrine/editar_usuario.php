@@ -4,10 +4,10 @@ session_start();
 $file = 'usuarios.json';
 $success = false;
 $errorLogin = false;
+$controladora = new editar_usuario_controladora();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-    $controladora = new editar_usuario_controladora();
     $resultado = $controladora->procesarEdicion($_POST);
     
     $errorLogin = $resultado['error'] ?? '';
@@ -88,46 +88,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                             </div>
                             <div class="filaLogin">
                                 <div class="label">Email</div>
-                                <div class="field"><input type="text" id="email" name="email"></input></div>
+                                <div class="field"><input type="text" id="email" name="email" value="<?= isset($_SESSION['usuario']) ? htmlspecialchars($_SESSION['usuario']->getEmail()) : '' ?>"></div>
                             </div>
                             <div class="filaLogin">
                                 <div class="label">Nombre Completo</div>
-                                <div class="field"><input type="text" id="name" name="name"></input></div>
+                                <div class="field"><input type="text" id="name" name="name" value="<?= isset($_SESSION['usuario']) ? htmlspecialchars($_SESSION['usuario']->getNombre()) : '' ?>"></div>
                             </div>
                             <div class="filaLogin">
-                                <div class="label">Nueva Contraseña</div>
+                                <div class="label">Contraseña</div>
                                 <div class="field"><input type="text" id="password" name="password"></input></div>
                             </div>
                             <div class="filaLogin">
                                 <div class="label">Teléfono</div>
-                                <div class="field"><input type="tel" id="telephone" name="telephone"></div>
+                                <div class="field"><input type="tel" id="telephone" name="telephone" value="<?= isset($_SESSION['usuario']) ? htmlspecialchars($_SESSION['usuario']->getTelefono()) : '' ?>"></div>
                             </div>
                             <div class="filaLogin">
                                 <div class="label">Dirección</div>
-                                <div class="field"><input type="text" id="direccion" name="direccion"></div>
+                                <div class="field"><input type="text" id="direccion" name="direccion" value="<?= isset($_SESSION['usuario']) ? htmlspecialchars($_SESSION['usuario']->getDireccion()) : '' ?>"></div>
                             </div>
                             <div class="filaLogin">
                                 <div class="label">Localidad</div>
-                                <div class="field"><input type="text" id="localidad" name="localidad"></div>
+                                <div class="field"><input type="text" id="localidad" name="localidad" value="<?= isset($_SESSION['usuario']) ? htmlspecialchars($_SESSION['usuario']->getLocalidad()) : '' ?>"></div>
                             </div>
                             <div class="filaLogin">
                                 <div class="label">Código Postal</div>
-                                <div class="field"><input type="text" id="codigo_postal" name="codigo_postal"></div>
+                                <div class="field"><input type="text" id="codigo_postal" name="codigo_postal" value="<?= isset($_SESSION['usuario']) ? htmlspecialchars($_SESSION['usuario']->getCodigoPostal()) : '' ?>"></div>
                             </div>
                             <div class="filaLogin">
                                 <div class="label">Número de Tarjeta</div>
-                                <div class="field"><input type="number" id="tarjeta" name="tarjeta"></div>
+                                <div class="field"><input type="number" id="tarjeta" name="tarjeta" value="<?= isset($_SESSION['usuario']) ? htmlspecialchars($controladora->getControladora()->descifrar($_SESSION['usuario']->getNumTarjeta(), "tarjeta")) : '' ?>"></div>
                             </div>
                             <div class="filaLogin">
-                                <div class="label">Fecha de Caducidad</div>
-                                <div class="field">
-                                    <input type="number" id="mes_caducidad" name="mes_caducidad" min="1" max="12" placeholder="Mes">
-                                    <input type="number" id="año_caducidad" name="year_caducidad" min="2025" placeholder="Año">
-                                </div>
+                                <div class="label">Nueva Fecha de Caducidad</div>
+                                <div class="field"><input type="date" id="fecha" name="fecha"></div>
                             </div>
                             <div class="filaLogin">
                                 <div class="label">CCV</div>
-                                <div class="field"><input type="number" id="ccv" name="ccv"></div>
+                                <div class="field"><input type="number" id="ccv" name="ccv" value="<?= isset($_SESSION['usuario']) ? htmlspecialchars($controladora->getControladora()->descifrar($_SESSION['usuario']->getCcv(), "ccv")) : '' ?>"></div>
                             </div>
                             <div class="filaLogin">
                                 <button type="submit" class="boton">Editar Perfil</button>
@@ -233,7 +230,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                         <li><a class="ignoreLink" href="login.php">Iniciar sesión</a></li>
                         <a class="ignoreLink" href="editar_usuario.php"><li>Editar perfil</li></a>
                         <a class="ignoreLink" href="#"><li>Eventos favoritos</li></a>
-                        <a class="ignoreLink" href="ticket.php"><li>Eventos Inscritos</li></a>
+                        <a class="ignoreLink" href="listado_eventos.php"><li>Eventos Inscritos</li></a>
                     </div>
                     <div>
                         <h1>Promotor</h1>

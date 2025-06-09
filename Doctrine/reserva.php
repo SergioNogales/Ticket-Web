@@ -8,7 +8,7 @@
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") 
     {
-        $controladora->procesarBorrado($_POST);
+        $controladora->procesarReserva($_POST);
     }
 ?>
     <head>
@@ -58,7 +58,7 @@
                 <?php
                     if(!empty($_SESSION['usuario']) && isset($_SESSION['evento']) && $_SESSION['evento'] !== "")
                     {
-                        $tempEvent = $_SESSION['evento'];
+                        $tempEvent = $controladora->getControladora()->buscarEvento($_SESSION['evento']->getId());
                         echo '<script>$(".noSignin").hide();</script>';
                         echo '<div class="main">';
                         echo '<div class="fila" id="ticket">';
@@ -83,7 +83,24 @@
                             echo '<div class="tituloActividades">Actividades programadas:</div>';
                             foreach($actividades as $actividad)
                             {
-                                echo '<li>'. $actividad->getNombre() . '   Descripción: ' . $actividad->getDescripcion() . 'Fecha:' . $actividad->getFecha()->format('Y-m-d')  . 'Lugar:' . $actividad->getLugar() . 'Plazas:' . $actividad->getPlazas() .'</li>';
+                                echo '<li>'. $actividad->getNombre() . '   Descripción: ' . $actividad->getDescripcion() . '   Fecha:' . $actividad->getFecha()->format('Y-m-d')  . '   Lugar:' . $actividad->getLugar() . '   Plazas:' . $actividad->getPlazas() .'</li>';
+                                $reserva = $controladora->buscarReservaActividad($actividad->getId());
+                                if(!empty($reserva))
+                                {
+                                    echo '<li>RESERVADA</li>';
+                                    echo '            <form action="reserva.php" method="post" style="display: inline;">';
+                                    echo '                <input type="hidden" name="reserva" value="'.$reserva->getReserva()->getId().'">';
+                                    echo '                <input type="hidden" name="reservaId" value="'.$reserva->getId().'">';
+                                    echo '                <button type="submit" name="accion" value="borrarActividad" class="boton">Cancelar Reserva</button>';
+                                    echo '            </form>';
+                                }
+                                else
+                                {
+                                    echo '            <form action="reserva.php" method="post" style="display: inline;">';
+                                    echo '                <input type="hidden" name="actividad" value="'.$actividad->getId().'">';
+                                    echo '                <button type="submit" name="accion" value="reservaActividad" class="boton">Reservar Actividad</button>';
+                                    echo '            </form>';
+                                }
                             }
                             echo '</div>';
                             echo '</div>';
@@ -122,7 +139,7 @@
                         <li><a class="ignoreLink" href="login.php">Iniciar sesión</a></li>
                         <a class="ignoreLink" href="editar_usuario.php"><li>Editar perfil</li></a>
                         <a class="ignoreLink" href="#"><li>Eventos favoritos</li></a>
-                        <a class="ignoreLink" href="ticket.php"><li>Eventos Inscritos</li></a>
+                        <a class="ignoreLink" href="listado_eventos.php"><li>Eventos Inscritos</li></a>
                     </div>
                     <div>
                         <h1>Promotor</h1>

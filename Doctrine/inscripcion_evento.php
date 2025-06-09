@@ -1,4 +1,18 @@
 <html lang="es">
+<?php
+    require_once 'reserva_controladora.php';
+    session_start();
+    $controladora = new reserva_controladora();
+    $success = false;
+    $errores = [];
+    
+    if ($_SERVER["REQUEST_METHOD"] == "POST") 
+    {
+        $resultado = $controladora->procesarReservaEvento($_POST);
+        $errores = $resultado['errores'];
+        $success = $resultado['success'];
+    }
+?>
     <head>
         <meta charset="UTF-8">
         <meta name="author" content="Sergio Nogales Sanz">
@@ -37,95 +51,61 @@
                 <div class="fila" id="loginContainer">
                     <div id="logindiv">
                         <form class="margin" id="update" method="post" action="#">
-                            <h1>Datos del inscrito</h1>
+                            <h1>Datos adicionales</h1>
                             <div class="alerta_errorLogin"></div>
                             <div class="filaLogin">
-                                <div class="label">Email</div>
-                                <div class="field"><input type="text" id="email" name="email"></input></div>
+                                <div class="label">Nombre completo del asistente</div>
+                                <div class="field"><input type="text" id="name" name="name"></input></div>
                             </div>
                             <div class="filaLogin">
-                                <div class="label">Nombre</div>
-                                <div class="field"><input type="text" id="name" name="password"></input></div>
-                            </div>
-                            <div class="filaLogin">
-                                <div class="label">Apellidos</div>
-                                <div class="field"><input type="text" id="surname" name="password"></input></div>
+                                <div class="label">Edad</div>
+                                <div class="field"><input type="text" id="edad" name="edad"></input></div>
                             </div>
                             <div class="filaLogin">
                                 <div class="label">DNI</div>
                                 <div class="field"><input type="text" id="dni" name="dni"></input></div>
                             </div>
                             <div class="filaLogin">
-                                <div class="label">Teléfono</div>
-                                <div class="field"><input type="text" id="telef" name="telef"></input></div>
+                                <div class="label">Alergias (especificar cuales)</div>
+                                <div class="field"><input type="text" id="alergia" name="alergia"></input></div>
                             </div>
                             <div class="filaLogin">
                                 <button id="updateSend" class="boton">Inscribirse</button>
                             </div>
                             <script>
                                 $(document).ready(function() {
-                                   $('#update').submit(function(event) {
-                       
+                                   $('#update').submit(function(event) 
+                                   {
                                        var error = false;
                                        var listaErrores = $('<ul>')
-                                       var regExpEmail = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+$/;
-                                       var regExpDni = /^[0-9]{8}[A-Z]$/;
-                                       var regExpTelef = /^[0-9]{9}$/;
-                       
+                                       var numero = /^[0-9]+$/;
                                        $('.alerta_errorLogin').html('<p><b>Errores</b></p>').show();
                        
-                                       if( $('#email').val() == "") 
-                                       {
+                                        if( $('#name').val() == "") 
+                                        {
                                            error = true;
-                                           $('<li>').html("Ha de introducirse el email").appendTo(listaErrores);
-                                       }
-                                       else
-                                       {
-                                           if( !regExpEmail.test($('#email').val())) 
-                                           {
-                                               error = true;
-                                               $('<li>').html("El email introducido no es válido").appendTo(listaErrores);
-                                           }
-                                       }
-                                       if( $('#name').val() == "") 
-                                       {
+                                           $('<li>').html("Ha de rellenarse el campo del nombre").appendTo(listaErrores);
+                                        }
+                                        if( $('#edad').val() == "") 
+                                        {
                                            error = true;
-                                           $('<li>').html("Ha de introducirse el nombre").appendTo(listaErrores);
-                                       }
-
-                                       if( $('#surname').val() == "") 
-                                       {
+                                           $('<li>').html("Ha de rellenarse el campo de edad").appendTo(listaErrores);
+                                        }
+                                        if(!numero.test($('#edad').val())) 
+                                        {
                                            error = true;
-                                           $('<li>').html("Han de introducirse los apellidos").appendTo(listaErrores);
-                                       }
-
-                                       if( $('#dni').val() == "") 
-                                       {
+                                           $('<li>').html("La edad debe ser un número").appendTo(listaErrores);
+                                        }
+                                        if( $('#edad').val() < 3) 
+                                        {
                                            error = true;
-                                           $('<li>').html("Has de introducir el DNI del inscrito").appendTo(listaErrores);
-                                       }
-                                       else
-                                       {
-                                           if( !regExpDni.test($('#dni').val())) 
-                                           {
-                                               error = true;
-                                               $('<li>').html("El DNI introducido no es válido").appendTo(listaErrores);
-                                           }
-                                       }
-
-                                       if( $('#telef').val() == "") 
-                                       {
+                                           $('<li>').html("Los asistentes deben tener una edad mínima de 3 años").appendTo(listaErrores);
+                                        }
+                                        if( $('#DNI').val() == "") 
+                                        {
                                            error = true;
-                                           $('<li>').html("Has de introducir el teléfono de contacto personal").appendTo(listaErrores);
-                                       }
-                                       else
-                                       {
-                                           if( !regExpTelef.test($('#telef').val())) 
-                                           {
-                                               error = true;
-                                               $('<li>').html("El telef introducido no es válido").appendTo(listaErrores);
-                                           }
-                                       }
+                                           $('<li>').html("Ha de rellenarse el campo de DNI").appendTo(listaErrores);
+                                        }
                        
                                        if( error ) 
                                        {  
@@ -164,7 +144,7 @@
                         <li><a class="ignoreLink" href="login.php">Iniciar sesión</a></li>
                         <a class="ignoreLink" href="editar_usuario.php"><li>Editar perfil</li></a>
                         <a class="ignoreLink" href="#"><li>Eventos favoritos</li></a>
-                        <a class="ignoreLink" href="ticket.php"><li>Eventos Inscritos</li></a>
+                        <a class="ignoreLink" href="listado_eventos.php"><li>Eventos Inscritos</li></a>
                     </div>
                     <div>
                         <h1>Promotor</h1>

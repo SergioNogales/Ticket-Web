@@ -209,13 +209,17 @@ class eventos_controladora {
     {
         if(isset($datosFormulario['accion']) && isset($datosFormulario['reserva']))
         {
-            $idEvento = $datosFormulario['reserva'];
-            $evento = $this->getControladora()->buscarEvento($idEvento);
-            $usuario = $_SESSION['usuario'];
-            $_SESSION['evento'] = $evento;
+            $evento = $this->getControladora()->buscarEvento($_SESSION['evento']);
 
-            $this->getControladora()->addReserva($usuario, $evento);
-            header("Location: reserva.php");
+            if($evento->getPrecio() < $_SESSION['usuario']->getSaldo())
+            {
+                $_SESSION['reserva'] = $datosFormulario['reserva'];
+                header("Location: inscripcion_evento.php");
+            }
+            else
+            {
+                return "No tiene saldo suficiente";
+            }
         }
 
         if(isset($datosFormulario['accion']) && isset($datosFormulario['id_evento'])) 
@@ -265,6 +269,48 @@ class eventos_controladora {
                     break;
             }
         }
+    }
+
+    public function perteneceEvento ($usuario, $evento_)
+    {
+        if($usuario->getRol() != "promotor")
+        {
+            return false;
+        }
+
+        $eventos = $this->buscarEventos($usuario);
+        foreach ($eventos as $evento)
+        {
+            if($evento->getId() == $evento_->getId())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function perteneceActividad ($usuario, $actividad_)
+    {
+        if($usuario->getRol() != "promotor")
+        {
+            return false;
+        }
+
+        $eventos = $this->buscarEventos($usuario);
+        foreach ($eventos as $evento)
+        {
+            $actividades = $this->getCOntroladora()->buscarActividades($evento);
+            foreach ($actividades as $actividad)
+            {
+                if($actividad->getId() == $actividad_->getId())
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
     
 }
