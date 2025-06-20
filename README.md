@@ -22,4 +22,4 @@ Página web de venta de tickets completamente funcional implementada en distinta
 <li>XAMPP</li>
 <li>MariaDB</li>
 <li>Doctrine</li>
-<li>Symphony</li>
+<li>Symfony</li>
