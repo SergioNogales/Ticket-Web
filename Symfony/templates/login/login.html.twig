@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inicio de Sesión{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+{% endblock %}
+
+{% block body %}
+<main>
+    <section class="main">
+        <div id="titulo"><h1>Identifícate</h1></div>
+        <div class="barra2"></div>
+        <div class="fila" id="loginContainer">
+            <div id="logindiv">
+                <form class="margin" id="login" method="post">
+                    {% if error %}
+                        <div class="alerta_errorLogin"> 
+                            <p><b>Errores</b></p>
+                            <ul>
+                                {% for err in error %}
+                                    <li>{{ err }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    
+                    <h1>Iniciar Sesión</h1>
+                    <div class="alerta_exito" {% if not success %}style="display: none;"{% else %}style="display: flex;"{% endif %}> 
+                        El inicio de sesión se completó con éxito.
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Email</div>
+                        <div class="field">
+                            <input type="text" id="email" name="email" autofocus>
+                        </div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Contraseña</div>
+                        <div class="field">
+                            <input type="password" id="contraseña" name="contraseña">
+                        </div>
+                    </div>
+                    <div class="filaLogin">
+                        <button type="submit" class="boton">Iniciar Sesión</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

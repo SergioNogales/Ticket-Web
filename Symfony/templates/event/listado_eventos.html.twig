@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Listado de Eventos{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/listado_eventos.css') }}">
+{% endblock %}
+
+{% block body %}
+<main>
+    <section class="noSignin" {% if auth %}style="display: none;"{% endif %}>
+        <div class="noneContenedor">
+            <div id="errorcontainer">
+                <div class="alerta_Login">
+                    <h1>Debe iniciar sesión para poder acceder a los detalles de eventos</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="main eventos" {% if not authPromotor %}style="display: none;"{% endif %}>
+        <div id="titulo"><h1>Vista de Promotor - Mis Eventos</h1></div>
+        <div class="barra2"></div>
+        
+        {% if eventosPromotor is defined and eventosPromotor is not empty %}
+            {% for evento in eventosPromotor %}
+                <article class="evento">
+                    <div class="fila">
+                        <div>
+                            <div class="tituloEvento">{{ evento.nombre }}</div>
+                            <div class="descEvento">Categoría: {{ evento.tipo }}</div>
+                            <div class="descEvento">Gestionado por: {{ evento.usuario.nombre }}</div>
+                            <div class="fecha">
+                                Fecha inicio: {{ evento.fechaInicio|date('Y-m-d') }} hasta: {{ evento.fechaFin|date('Y-m-d') }}
+                            </div>
+                        </div>
+                            <form method="post" {% if not auth %}style="display: none;"{% endif %} action="{{ path('detallesevento') }}">
+                                <input type="hidden" name="evento" value="{{ evento.id }}">
+                                <button type="submit" class="eventoBoton" name="detalles" value="detalles">Detalles</button>
+                            </form>
+                    </div>
+                </article>
+            {% endfor %}
+        {% else %}
+            <div class="noneContenedor">
+                <div id="errorcontainer">
+                    <div class="alerta_Login">
+                        <h1>Usted no tiene eventos.</h1>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </section>
+
+    <section class="main eventos">
+        <div id="titulo"><h1>Listado de Eventos</h1></div>
+        <div class="barra2"></div>
+        
+        {% if eventos is defined and eventos is not empty %}
+            {% for evento in eventos %}
+                {% if not filter_ or evento.tipo == filter_ %}
+                    <article class="evento">
+                        <div class="fila">
+                            <div>
+                                <div class="tituloEvento">{{ evento.nombre }}</div>
+                                <div class="descEvento">Categoría: {{ evento.tipo }}</div>
+                                <div class="fecha">
+                                    Fecha inicio: {{ evento.fechaInicio|date('Y-m-d') }} hasta: {{ evento.fechaFin|date('Y-m-d') }}
+                                </div>
+                            </div>
+                            <form method="post" {% if not auth %}style="display: none;"{% endif %} action="{{ path('detallesevento') }}">
+                                <input type="hidden" name="evento" value="{{ evento.id }}">
+                                <button type="submit" class="eventoBoton" name="detalles" value="detalles">Detalles</button>
+                            </form>
+                        </div>
+                    </article>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            {% if filter_ is defined and filter_ %}
+                <div class="noneContenedor">
+                    <div id="errorcontainer">
+                        <div class="alerta_Login">
+                            <h1>No existen eventos anunciados con ese filtro.</h1>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="noneContenedor">
+                    <div id="errorcontainer">
+                        <div class="alerta_Login">
+                            <h1>No existen eventos anunciados.</h1>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+    </section>
+</main>
+{% endblock %}

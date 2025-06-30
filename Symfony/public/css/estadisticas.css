@@ -1,0 +1,75 @@
+
+.resumenEstadisticas {
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.filaEstadisticas {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 20px;
+}
+
+.tarjetaEstadistica {
+    background-color: white;
+    border-radius: 10px;
+    border: solid 1px rgb(39, 39, 39);
+    padding: 20px;
+    flex: 1;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.tarjetaEstadistica h2 {
+    font-size: 1.2rem;
+    color: rgb(39, 39, 39);
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.tarjetaEstadistica .valor {
+    font-size: 2rem;
+    font-weight: bold;
+    color: rgb(73, 73, 233);
+}
+
+.tablasDetalle {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.tablaEstadisticas {
+    flex: 1;
+    background-color: white;
+    border-radius: 10px;
+    border: solid 1px rgb(39, 39, 39);
+    padding: 20px;
+}
+
+.tablaEstadisticas h2 {
+    margin-bottom: 15px;
+    color: rgb(39, 39, 39);
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+}
+
+.filaAsistentes {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.filaAsistentes.encabezado {
+    font-weight: bold;
+    background-color: rgb(240, 240, 240);
+    border-radius: 4px;
+}
+
+.columnaAsistentes {
+    flex: 1;
+    padding: 0 10px;
+    font-family: Arial, sans-serif;
+}

@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Detalles del Evento{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/detallesEvento.css') }}">
+{% endblock %}
+
+{% block body %}
+<main>
+    <section class="noSignin" {% if auth and evento is defined %}style="display: none;"{% endif %}>
+        <div class="noneContenedor">
+            <div class="alerta_Login">
+                <h1>Debe tener sesión iniciada y haber seleccionado un evento de la lista de eventos.</h1>
+            </div>
+        </div>
+    </section>
+
+    <section class="main">
+        <div id="titulo"><h1>Detalles del evento</h1></div>
+        <div class="barra2"></div>
+    </section>
+
+    <section id="evento" {% if evento is not defined or evento is empty or not auth %}style="display: none;"{% endif %}>
+        {% if evento is defined and evento is not empty %}
+            <div id="eventoDetalles">
+                <div class="filaDetalles">
+                    <div id="capsulaDetalles">
+                        <div class="margin">
+                            <div class="tituloEvento">{{ evento.nombre }}</div>
+                            <div class="descEvento">{{ evento.lugar }}</div>
+                            <div class="fecha">Desde: {{ evento.fechaInicio|date('Y-m-d') }} Hasta: {{ evento.fechaFin|date('Y-m-d') }}</div>
+                        </div>
+                    </div>
+                    <div class="precio">{{ evento.precio }}€</div>
+                    
+                    {% if (evento.plazas - plazasOcupadas) > 0 %}
+                        <form method="post" style="display: inline;">
+                            <input type="hidden" name="reserva" value="{{ evento.id }}">
+                            <button type="submit" name="accion" value="reserva" class="boton">Inscribirse</button>
+                        </form>
+                        </div>
+                        <div class="tituloEvento">{{ evento.plazas - plazasOcupadas }} Plazas</div>
+                    {% else %}
+                        </div>
+                        <div class="tituloEvento">No quedan Plazas</div>
+                    {% endif %}
+
+                    <div class="actividades negro">
+                        <div class="margin">
+                            <div class="descEvento">{{ evento.descripcion }}</div>
+                            {% if actividades is defined and actividades is not empty %}
+                                <div class="tituloActividades">Actividades programadas:</div>
+                                <ul>
+                                {% for actividad in actividades %}
+                                    <li>
+                                        {{ actividad.nombre }} - Descripción: {{ actividad.descripcion }} 
+                                        - Fecha y hora: {{ actividad.fecha|date('Y-m-d') }} {{ actividad.hora|date('H:i') }}
+                                        - Lugar: {{ actividad.lugar }} - Plazas: {{ actividad.plazas }}
+                                        
+                                        {% if authPromotor %}
+                                            <form method="post" style="display: inline;">
+                                                <input type="hidden" name="evento" value="{{ evento.id }}">
+                                                <input type="hidden" name="actividad" value="{{ actividad.id }}">
+                                                <button type="submit" name="accion" value="borrarActividad" class="boton">Borrar actividad</button>
+                                                <button type="submit" name="accion" value="modificarActividad" class="boton">Modificar actividad</button>
+                                            </form>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                                </ul>
+                            {% else %}
+                                <div class="tituloActividades">No hay actividades programadas</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+        {% endif %}
+    </section>
+
+    {% if authPromotor and evento is defined and evento is not empty %}
+        <section class="main">
+            <div id="titulo"><h1>Herramientas de promotor</h1></div>
+            <div class="barra2"></div>
+        </section>
+        <section class="main">
+            <form method="post">
+                <input type="hidden" name="evento" value="{{ evento.id }}">
+                <div class="filaLogin">
+                    <button type="submit" name="accion" value="modificar" class="boton">Modificar evento</button>
+                </div>
+                <div class="filaLogin">
+                    <button type="submit" name="accion" value="borrar" class="boton">Borrar evento</button>
+                </div>
+                <div class="filaLogin">
+                    <button type="submit" name="accion" value="añadir_actividad" class="boton">Añadir actividad</button>
+                </div>
+                <div class="filaLogin">
+                    <button type="submit" name="accion" value="verAsistentes" class="boton">Ver asistentes</button>
+                </div>
+            </form>
+        </section>
+    {% endif %}
+</main>
+{% endblock %}

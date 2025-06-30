@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Solicitud de roles{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/solicitudes.css') }}">
+{% endblock %}
+
+{% block body %}
+<main>
+    <section class="none" {% if auth %}style="display: none;"{% endif %}>
+        <div id="errorcontainer">
+            <div class="alerta_Login">
+                <h1>Debe iniciar sesión previo a la solicitud de roles</h1>
+            </div>
+        </div>
+    </section>
+    
+    <section class="main cliente" {% if not auth %}style="display: none;"{% endif %}>
+        <form class="margin" id="solicitarRol" method="post">
+            <h1>Solicitar Rol</h1>
+            {% if error is defined and error is not empty %}
+                <div class="alerta_errorRol">
+                    <p><b>Errores</b></p>
+                    <ul>
+                        {% for err in error %}
+                            <li>{{ err }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <div class="rolActual">Rol actual: {{ rol ?? ''}}</div>
+            
+            <div class="alerta_exito" {% if not success %}style="display: none;"{% endif %}>
+                La solicitud fue enviada correctamente.
+            </div>
+            
+            <div class="alerta_pendiente" {% if not solicitudPendiente %}style="display: none;"{% endif %}>
+                La anterior solicitud sigue pendiente.
+            </div>
+            
+            <div class="filaLogin" {% if solicitudPendiente %}style="display: none;"{% endif %}>
+                <div class="label">Solicitar como</div>
+                <div class="field">
+                    <select id="rol" name="rol">
+                        <option value="">Selecciona una opción</option>
+                        {% if rol is defined and rol == 'cliente' %}
+                            <option value="promotor">Promotor</option>
+                        {% endif %}
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="filaLogin" {% if solicitudPendiente %}style="display: none;"{% endif %}>
+                <button type="submit" class="boton">Enviar Solicitud</button>
+            </div>
+        </form>
+    </section>
+</main>
+{% endblock %}

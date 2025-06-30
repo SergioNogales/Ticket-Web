@@ -1,0 +1,21 @@
+.tabla-asistentes {
+    width: 100%;
+    margin: 20px 0;
+}
+
+.filaAsistentes.encabezado {
+    font-weight: bold;
+    background-color: #f0f0f0;
+    border-bottom: 2px solid #ddd;
+}
+
+.filaAsistentes {
+    display: flex;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.columnaAsistentes {
+    flex: 1;
+    padding: 0 10px;
+}

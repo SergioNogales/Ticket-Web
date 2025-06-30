@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edición de Evento{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/crear_evento.css') }}">
+{% endblock %}
+
+{% block body %}
+<main>
+    <section class="main promotor" {% if not auth or not evento %}style="display: none;"{% endif %}>
+        <div id="titulo"><h1>Edición de evento</h1></div>
+        <div class="barra2"></div>
+        <div class="margin">
+            <div id="logindiv">
+                <form class="margin" id="update" method="post">
+                    <h1>Datos Evento</h1>
+
+                    {% if error is not empty %}
+                        <div class="alerta_errorLogin">
+                            <p><b>Errores</b></p>
+                            <ul>
+                                {% for err in error %}
+                                    <li>{{ err }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <div class="alerta_exito" {% if not success %}style="display: none;"{% endif %}>
+                        El evento se ha editado con éxito.
+                    </div>
+
+                    <div class="filaLogin">
+                        <div class="label">Nombre</div>
+                        <div class="field"><input type="text" id="nombre" name="nombre"  value="{{ nombre ?? ''}}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Ubicación</div>
+                        <div class="field"><input type="text" id="ubicacion" name="ubicacion"  value="{{ ubicacion ?? ''}}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Descripción</div>
+                        <div class="field"> <textarea id="descripcion" name="descripcion">{{ descripcion ?? '' }}</textarea></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Precio por entrada</div>
+                        <div class="field"><input type="number" id="precio" name="precio"  value="{{ precio ?? ''}}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Número de plazas</div>
+                        <div class="field"><input type="number" id="numEntrada" name="numEntrada"  value="{{ numEntrada ?? ''}}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Tipo</div>
+                        <div class="field"><input type="text" id="tipo" name="tipo"  value="{{ tipo ?? ''}}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Fecha Inicio</div>
+                        <div class="field"><input type="date" id="fInicio" name="fInicio" value="{{ (fInicio is defined and fInicio ? fInicio|date('Y-m-d') : '') }}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Fecha Fin</div>
+                        <div class="field"><input type="date" id="fFin" name="fFin" value="{{ (fFin is defined and fFin ? fFin|date('Y-m-d') : '') }}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <button id="updateSend" class="boton">Editar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <section class="none" {% if auth %}style="display: none;"{% endif %}>
+        <div class="noneContenedor">
+            <div id="errorcontainer">
+                <div class="alerta_Login">
+                    <h1>Debe iniciar sesión como promotor previo a editar eventos</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="none" {% if evento or not auth %} style="display: none;"{% endif %}>
+        <div class="noneContenedor">
+            <div id="errorcontainer">
+                <div class="alerta_Login">
+                    <h1>Debe seleccionar un evento a editar desde el listado</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

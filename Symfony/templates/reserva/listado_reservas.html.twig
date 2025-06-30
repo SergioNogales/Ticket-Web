@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mis Reservas{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/listado_eventos.css') }}">
+{% endblock %}
+
+{% block body %}
+<main>
+    <section class="noSignin" {% if auth %}style="display: none;"{% endif %}>
+        <div class="noneContenedor">
+            <div id="errorcontainer">
+                <div class="alerta_Login">
+                    <h1>Debe iniciar sesión para acceder a tus reservas</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="main eventos reservas" {% if not auth %}style="display: none;"{% endif %}>
+        <div id="titulo"><h1>Mis Reservas</h1></div>
+        <div class="barra2"></div>
+        
+        {% if reservas is defined and reservas is not empty %}
+            {% for reserva in reservas %}
+                <article class="evento">
+                    <div class="fila">
+                        <div>
+                            <div class="tituloEvento">{{ reserva.evento.nombre }}</div>
+                            <div class="descEvento">Categoría: {{ reserva.evento.tipo }}</div>
+                            <div class="descEvento">Entrada de: {{ reserva.nombre }}</div>
+                            <div class="fecha">
+                                Fecha inicio: {{ reserva.evento.fechaInicio|date('Y-m-d') }} hasta: {{ reserva.evento.fechaFin|date('Y-m-d') }}
+                            </div>
+                        </div>
+                        <form method="post">
+                            <input type="hidden" name="reserva" value="{{ reserva.id }}">
+                            <button type="submit" class="eventoBoton" name="detalles" value="detalles">Detalles</button>
+                        </form>
+                    </div>
+                </article>
+            {% endfor %}
+        {% else %}
+            <div class="noneContenedor">
+                <div id="errorcontainer">
+                    <div class="alerta_Login">
+                        <h1>No tienes reservas actualmente.</h1>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </section>
+</main>
+{% endblock %}

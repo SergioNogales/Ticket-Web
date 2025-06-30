@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Asistentes al Evento{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/listado_eventos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/asistentes.css') }}">
+{% endblock %}
+
+{% block body %}
+<main>
+    <section class="noSignin" {% if auth %}style="display: none;"{% endif %}>
+        <div class="noneContenedor">
+            <div id="errorcontainer">
+                <div class="alerta_Login">
+                    <h1>Debe iniciar sesión como promotor para ver los asistentes</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="main eventos asistentes" {% if not auth %}style="display: none;"{% endif %}>
+        <div id="titulo"><h1>Listado de Asistentes</h1></div>
+        <div class="barra2"></div>
+        
+        {% if reservas is defined and reservas is not empty %}
+            <div class="tabla-asistentes">
+                <div class="filaAsistentes encabezado">
+                    <div class="columnaAsistentes">Nombre</div>
+                    <div class="columnaAsistentes">DNI</div>
+                    <div class="columnaAsistentes">Edad</div>
+                </div>
+                {% for reserva in reservas %}
+                    <div class="filaAsistentes">
+                        <div class="columnaAsistentes">{{ reserva.nombre }}</div>
+                        <div class="columnaAsistentes">{{ reserva.dni }}</div>
+                        <div class="columnaAsistentes">{{ reserva.edad }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="noneContenedor">
+                <div id="errorcontainer">
+                    <div class="alerta_Login">
+                        <h1>No hay reservas registradas para este evento.</h1>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </section>
+</main>
+{% endblock %}

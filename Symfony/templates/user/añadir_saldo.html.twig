@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Añadir saldo{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/register.css') }}">
+{% endblock %}
+
+{% block body %}
+<main>
+    {% if not auth %}
+    <div class="main">
+        <div id="errorcontainer">
+            <div class="alerta_errorLogin2">
+                <h1>Para acceder a esta característica debe iniciar sesión.</h1>
+            </div>
+        </div>
+    </div> 
+    {% endif %}
+    <section class="main" {% if not auth %}style="display: none;"{% endif %}>
+        <div id="titulo"><h1>Añadir Saldo</h1></div>
+        <div class="barra2"></div>
+        <div class="fila" id="loginContainer">
+            <div id="registerdiv">
+                <form class="margin" id="register" method="post">
+                    <h1>Mi cartera</h1>
+                    <div class="alerta_exito" {% if not success %}style="display: none;"{% endif %}> 
+                        El saldo se añadió con éxito.
+                    </div>
+                    <div class="alerta_errorSignin">
+                    {% if error is not empty %}
+                        <div class="alerta_errorSignin">
+                            <p><b>Errores</b></p>
+                            <ul>
+                                {% for err in error %}
+                                    <li>{{ err }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Saldo: {{ saldo ?? 0 }}€</div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Número de Tarjeta</div>
+                        <div class="field"><input type="number" id="tarjeta" name="tarjeta" value="{{ tarjeta ?? ''}}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Fecha de Caducidad</div>
+                        <div class="field"><input type="date" id="fecha" name="fecha" value="{{ (fecha is defined and fecha ? fecha|date('Y-m-d') : '') }}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">CCV</div>
+                        <div class="field"><input type="number" id="ccv" name="ccv" value="{{ ccv ?? ''}}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Saldo a añadir</div>
+                        <div class="field"><input type="number" id="saldo" name="saldo"></div></div>
+                    <div class="filaLogin">
+                        <button type="submit" class="boton">Añadir saldo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

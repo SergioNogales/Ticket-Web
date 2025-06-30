@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Registro de Usuarios{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/register.css') }}">
+{% endblock %}
+
+{% block body %}
+<main>
+    <section class="main">
+        <div id="titulo"><h1>Identifícate</h1></div>
+        <div class="barra2"></div>
+        <div class="fila" id="loginContainer">
+            <div id="registerdiv">
+                <form class="margin" id="register" method="post">
+                    <h1>Registro</h1>
+                    <div class="alerta_exito" {% if not success %}style="display: none;"{% endif %}> 
+                        El registro se completó con éxito.
+                    </div>
+                    <div class="alerta_errorSignin">
+                    {% if error is not empty %}
+                        <div class="alerta_errorSignin">
+                            <p><b>Errores</b></p>
+                            <ul>
+                                {% for err in error %}
+                                    <li>{{ err }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Email</div>
+                        <div class="field"><input type="text" id="emailSignin" name="email"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Teléfono</div>
+                        <div class="field"><input type="tel" id="telefono" name="telefono"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Nombre Completo</div>
+                        <div class="field"><input type="text" id="nombre" name="nombre"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Dirección</div>
+                        <div class="field"><input type="text" id="direccion" name="direccion"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Localidad</div>
+                        <div class="field"><input type="text" id="localidad" name="localidad"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Código Postal</div>
+                        <div class="field"><input type="text" id="codigoPostal" name="codigoPostal"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Número de Tarjeta</div>
+                        <div class="field"><input type="number" id="tarjeta" name="tarjeta"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Fecha de Caducidad</div>
+                        <div class="field"><input type="date" id="fecha" name="fecha"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">CCV</div>
+                        <div class="field"><input type="number" id="ccv" name="ccv"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Contraseña</div>
+                        <div class="field"><input type="password" id="contraseña" name="contraseña"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Repetir Contraseña</div>
+                        <div class="field"><input type="password" id="repetirContraseña" name="repetirContraseña"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <button type="submit" class="boton">Registrarse</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

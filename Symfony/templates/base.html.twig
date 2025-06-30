@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Sergio Nogales Sanz">
+    <title>{% block title %}TusEventos.com{% endblock %}</title>
+    {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('css/boton_flotante.css') }}">
+    {% endblock %}
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="navegacion fila azul">
+            <div class="fila" id="izquierda">
+                <div><a class="ignoreLink" href="{{ path('landingpage') }}">TusEventos.com</a></div>
+                <div class="fila" id="izquierda2">
+                    <div><a class="ignoreLink" href="{{ path('listaeventosfiltrados', {'filtro': 'concierto'}) }}">Conciertos</a></div>
+                    <div><a class="ignoreLink" href="{{ path('listaeventosfiltrados', {'filtro': 'prueba deportiva'}) }}">Deportes</a></div>
+                    <div><a class="ignoreLink" href="{{ path('listaeventosfiltrados', {'filtro': 'cine'}) }}">Cine/Teatro</a></div>
+                    <div><a class="ignoreLink" href="{{ path('listaeventosfiltrados', {'filtro': 'exposicion'}) }}">Exposiciones</a></div>
+                    <div><a class="ignoreLink" href="{{ path('solicitud') }}">Solicitudes de Rol</a></div>
+                    <div><a class="ignoreLink" href="{{ path('añadirsaldo') }}">Añadir Saldo</a></div>
+                </div>
+            </div>
+            <div id="derecha">
+                <div>
+                    <img id="icon" src="{{ asset('images/icono.png') }}"/>
+                    {% set authToken = app.session.get('authenticated') %}
+                    {% if authToken and (date().timestamp - (authToken|replace({'authcode-': ''}))) < 1200 %}
+                        <a class="ignoreLink" href="{{ path('logout') }}">Cerrar sesión</a>
+                    {% else %}
+                        {% if app.request.attributes.get('_route') == 'login' %}
+                            <a class="ignoreLink" href="{{ path('signin') }}">Registrarse</a>
+                        {% else %}
+                            <a class="ignoreLink" href="{{ path('login') }}">Iniciar sesión</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    {% if authToken and (date().timestamp - (authToken|replace({'authcode-': ''}))) < 1200 %}
+        {% if app.session.get('admin') %}
+            <div class="botonFlotante" id="botonEstadisticas">
+                <img src="{{ asset('images/39915.png') }}">
+            </div>
+        {% endif %}
+        <div class="botonFlotante2" id="botonChat">
+            <img src="{{ asset('images/chat.png') }}">
+        </div>
+    {% endif %}
+
+
+    {% block body %}{% endblock %}
+
+    <footer>
+        <div class="footer negro fila" id="apartadoLegal">
+            <div id="contacto columna">
+                <h1>Redes Sociales</h1>
+                <div class="fila" id="redesSociales">
+                    <div><a class="ignoreLink" href="https://twitter.com"><img src="{{ asset('images/twitter.png') }}">Twitter</a></div>
+                    <div><a class="ignoreLink" href="https://instagram.com"><img src="{{ asset('images/instagram.png') }}">Instagram</a></div>
+                    <div><a class="ignoreLink" href="https://facebook.com"><img src="{{ asset('images/facebook.png') }}">Facebook</a></div>
+                </div>
+                <h1>Contáctanos</h1>
+                <div class="columna" id="contactoCorreo">
+                    <div>Correo electrónico: tuseventos@gmail.com</div>
+                    <div>Teléfono: 999 999 999</div>
+                </div>
+            </div>
+            <div class="barra"></div>
+            <div class="fila" id="indices">
+                <div>
+                    <h1>Usuario</h1>
+                    <li><a class="ignoreLink" href="{{ path('login') }}">Iniciar sesión</a></li>
+                    <a class="ignoreLink" href="{{ path('edituser') }}"><li>Editar perfil</li></a>
+                    <a class="ignoreLink" href="{{ path('listareservas') }}"><li>Eventos Inscritos</li></a>
+                </div>
+                <div>
+                    <h1>Promotor</h1>
+                    <a class="ignoreLink" href="{{ path('createevent') }}"><li>Crear Eventos</li></a>
+                    <a class="ignoreLink" href="{{ path('editevent') }}"><li>Editar Eventos</li></a>
+                    <a class="ignoreLink" href="{{ path('listaeventos') }}"><li>Listado de Eventos</li></a>
+                </div>
+                <div>
+                    <a class="ignoreLink" href=""><h1>TusEventos.com</h1></a>
+                    <a class="ignoreLink" href="#"><li>Política de privacidad</li></a>
+                    <a class="ignoreLink" href="#"><li>Política de reembolsos</li></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    {% block javascripts %}
+        <script>
+            $(document).ready(function() {
+                $('#botonEstadisticas').click(function() 
+                {
+                    window.location.href = "{{ path('estadisticas') }}";
+                });
+                $('#botonChat').click(function() 
+                {
+                    window.location.href = "{{ path('chat') }}";
+                });
+            });
+        </script>
+    {% endblock %}
+</body>
+</html>
