@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Chat{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/register.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/chat.css') }}">
+{% endblock %}
+
+{% block body %}
+<main>
+    <section class="noSignin" {% if auth %}style="display: none;"{% endif %}>
+        <div class="noneContenedor" id="errorcontainer">
+            <div class="alerta_Login">
+                <h1>Debe iniciar sesión para acceder a los mensajes</h1>
+            </div>
+        </div>
+    </section>
+
+    <section class="main mensajes" {% if not auth %}style="display: none;"{% endif %}>
+        <div id="titulo"><h1>Mensajes</h1></div>
+        <div class="barra2"></div>
+        
+        <div class="chat-container">
+            <div class="contactos">
+                <div class="contactos-header">
+                    <h2>Contactos</h2>
+                </div>
+                
+                <div class="lista-contactos">
+                    {% for usuario in usuarios %}
+                        <a href="{{ path('chat', {'interlocutor': usuario.email}) }}" 
+                           class="contacto {% if interlocutor is defined and interlocutor is not empty and usuario.email == interlocutor.email %}activo{% endif %}">
+                            <div class="contacto-info">
+                                <div class="contacto-nombre">{{ usuario.nombre}}</div>
+                                <div class="contacto-rol">{{ usuario.rol }}</div>
+                            </div>
+                        </a>
+                    {% else %}
+                        <div class="no-contactos">No hay usuarios disponibles</div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="conversacion">
+                {% if interlocutor is defined and interlocutor is not empty %}
+                    <div class="conversacion-header">
+                        <div class="interlocutor-info">
+                            <div class="interlocutor-nombre">{{ interlocutor.nombre}}</div>
+                            <div class="interlocutor-rol">{{ interlocutor.rol }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mensajes-container">
+                        {% for mensaje in mensajes %}
+                            <div class="mensaje {% if mensaje.emisor.email == user.email %}mensaje-propio{% else %}mensaje-recibido{% endif %}">
+                                <div class="mensaje-contenido">
+                                    <div class="mensaje-texto">{{ mensaje.mensaje }}</div>
+                                    <div class="mensaje-fecha">{{ mensaje.fechaEnvio|date('d/m/Y H:i') }}</div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="no-mensajes">No hay mensajes aún. ¡Envía el primero!</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="mensaje-input">
+                        <form method="post">
+                            <input type="hidden" name="destinatario_id" value="{{ interlocutor.email }}">
+                            <textarea name="mensaje" placeholder="Escribe tu mensaje..." required></textarea>
+                            <button type="submit" class="boton">Enviar</button>
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="selecciona-contacto">
+                        <p>Selecciona un contacto para comenzar a chatear</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mensajesContainer = document.querySelector('.mensajes-container');
+            if (mensajesContainer) {
+                mensajesContainer.scrollTop = mensajesContainer.scrollHeight;
+            }
+        });
+    </script>
+{% endblock %}

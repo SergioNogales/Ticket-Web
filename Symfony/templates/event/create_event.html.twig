@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Creación de Evento{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/crear_evento.css') }}">
+{% endblock %}
+
+{% block body %}
+<main>
+    <section class="main promotor" {% if not auth %}style="display: none;"{% endif %}>
+        <div id="titulo"><h1>Creación de evento</h1></div>
+        <div class="barra2"></div>
+        <div class="margin">
+            <div id="logindiv">
+                <form class="margin" id="update" method="post">
+                    <h1>Datos Evento</h1>
+
+                    {% if error is not empty %}
+                        <div class="alerta_errorLogin">
+                            <p><b>Errores</b></p>
+                            <ul>
+                                {% for err in error %}
+                                    <li>{{ err }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <div class="alerta_exito" {% if not success %}style="display: none;"{% endif %}>
+                        El evento se ha creado con éxito.
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Nombre</div>
+                        <div class="field"><input type="text" id="nombre" name="nombre"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Ubicación</div>
+                        <div class="field"><input type="text" id="ubicacion" name="ubicacion"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Descripción</div>
+                        <div class="field"><textarea id="descripcion" name="descripcion"></textarea></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Precio por entrada</div>
+                        <div class="field"><input type="number" id="precio" name="precio"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Número de plazas</div>
+                        <div class="field"><input type="number" id="numEntrada" name="numEntrada"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Tipo</div>
+                        <div class="field"><input type="text" id="tipo" name="tipo"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Fecha Inicio</div>
+                        <div class="field"><input type="date" id="fInicio" name="fInicio"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Fecha Fin</div>
+                        <div class="field"><input type="date" id="fFin" name="fFin"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <button id="updateSend" class="boton">Crear</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <section class="none" {% if auth %}style="display: none;"{% endif %}>
+        <div class="noneContenedor">
+            <div id="errorcontainer">
+                <div class="alerta_Login">
+                    <h1>Debe iniciar sesión como promotor previo a crear eventos</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

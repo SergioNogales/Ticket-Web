@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edición de perfil{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/register.css') }}">
+{% endblock %}
+
+{% block body %}
+<main>
+    {% if not auth %}
+    <div class="main">
+        <div id="errorcontainer">
+            <div class="alerta_errorLogin2">
+                <h1>Para acceder a esta característica debe iniciar sesión.</h1>
+            </div>
+        </div>
+    </div> 
+    {% endif %}
+    <section class="main" {% if not auth %}style="display: none;"{% endif %}>
+        <div id="titulo"><h1>Editar Perfil</h1></div>
+            Rellena todos los apartados, para dejar los valores por defecto añade el anterior.
+        <div class="barra2"></div>
+        <div class="fila" id="loginContainer">
+            <div id="registerdiv">
+                <form class="margin" id="register" method="post">
+                    <h1>Editar perfil</h1>
+                    <div class="alerta_exito" {% if not success %}style="display: none;"{% endif %}> 
+                        El perfil se editó con éxito.
+                    </div>
+                    <div class="alerta_errorSignin">
+                    {% if error is not empty %}
+                        <div class="alerta_errorSignin">
+                            <p><b>Errores</b></p>
+                            <ul>
+                                {% for err in error %}
+                                    <li>{{ err }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Email</div>
+                        <div class="field"><input type="text" id="emailSignin" name="email" value="{{ email ?? ''}}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Teléfono</div><div class="field"><input type="tel" id="telefono" name="telefono" value="{{ telefono ?? ''}}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Nombre Completo</div>
+                        <div class="field"><input type="text" id="nombre" name="nombre" value="{{ nombre ?? ''}}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Dirección</div>
+                        <div class="field"><input type="text" id="direccion" name="direccion" value="{{ direccion ?? ''}}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Localidad</div>
+                        <div class="field"><input type="text" id="localidad" name="localidad" value="{{ localidad ?? ''}}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Código Postal</div>
+                        <div class="field"><input type="text" id="codigoPostal" name="codigoPostal" value="{{ codigoPostal ?? ''}}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Número de Tarjeta</div>
+                        <div class="field"><input type="number" id="tarjeta" name="tarjeta" value="{{ tarjeta ?? ''}}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Fecha de Caducidad</div>
+                        <div class="field"><input type="date" id="fecha" name="fecha" value="{{ (fecha is defined and fecha ? fecha|date('Y-m-d') : '') }}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">CCV</div>
+                        <div class="field"><input type="number" id="ccv" name="ccv" value="{{ ccv ?? ''}}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Contraseña</div>
+                        <div class="field"><input type="password" id="contraseña" name="contraseña" value="{{ contraseña ?? ''}}"></div></div>
+                    <div class="filaLogin">
+                        <button type="submit" class="boton">Editar Perfil</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

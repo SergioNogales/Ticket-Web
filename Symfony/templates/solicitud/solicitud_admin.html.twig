@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Solicitud de roles{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/solicitudes.css') }}">
+{% endblock %}
+
+{% block body %}
+<main>
+    <section class="none" {% if auth %}style="display: none;"{% endif %}>
+        <div id="errorcontainer">
+            <div class="alerta_Login">
+                <h1>Debe iniciar sesión previo a la solicitud de roles</h1>
+            </div>
+        </div>
+    </section>
+
+    <section class="main eventos admin" {% if not auth %}style="display: none;"{% endif %}>
+        <h1>Solicitudes de roles</h1>
+        
+        {% for solicitud in solicitudes %}
+            {% set estado = solicitud.estado %}
+            {% set nuevoRol = solicitud.rolSolicitado %}
+            {% set usuario = solicitud.usuario %}
+            {% set nombre = usuario.nombre %}
+            {% set email = usuario.email %}
+            {% set rolActual = usuario.rol %}
+            
+            {% if estado != "" %}
+                <article class="evento">
+                    <div class="fila">
+                        <div>
+                            <div class="tituloEvento">Solicitud de Rol</div>
+                            <div class="descEvento">Usuario: {{ nombre }}</div>
+
+                            {% if estado == "pendiente" %}
+                                <div class="fecha">Rol actual: {{ rolActual }}    Solicita: {{ nuevoRol }}</div>
+                            </div>
+                            <form method="post">
+                                <input type="hidden" name="email" value="{{ email }}">
+                                <input type="hidden" name="rol" value="{{ nuevoRol }}">
+                                <div class="fila">
+                                    <button type="submit" class="eventoBoton" name="accion" value="aceptar">Aceptar</button>
+                                    <button type="submit" class="eventoBoton" name="accion" value="denegar">Denegar</button>
+                                </div>
+                            </form>
+                            {% elseif estado == "aprobada" %}
+                                <div class="fecha">Solicita: {{ nuevoRol }}</div>
+                            </div>
+                            <div id="aprobado">✅APROBADA</div>
+                            {% elseif estado == "denegada" %}
+                                <div class="fecha">Solicita: {{ nuevoRol }}</div>
+                            </div>
+                            <div id="denegado">❌DENEGADA</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </article>
+            {% endif %}
+        {% endfor %}
+    </section>
+{% endblock %}

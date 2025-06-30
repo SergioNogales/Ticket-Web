@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Añadir Actividad{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/crear_actividad.css') }}">
+{% endblock %}
+
+{% block body %}
+<main>
+    <section class="main promotor" {% if not auth or not evento %}style="display: none;"{% endif %}>
+        <div id="titulo"><h1>Añadir Actividad</h1></div>
+        <div class="barra2"></div>
+        <div class="margin">
+            <div id="logindiv">
+                <form class="margin" id="update" method="post">
+                    <h1>Datos de la Actividad</h1>
+
+                    {% if error is not empty %}
+                        <div class="alerta_errorLogin">
+                            <p><b>Errores</b></p>
+                            <ul>
+                                {% for err in error %}
+                                    <li>{{ err }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <div class="alerta_exito" {% if not success %}style="display: none;"{% endif %}>
+                        La actividad se ha añadido con éxito.
+                    </div>
+
+                    <div class="filaLogin">
+                        <div class="label">Nombre</div>
+                        <div class="field"><input type="text" id="nombre" name="nombre"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Lugar</div>
+                        <div class="field"><input type="text" id="lugar" name="lugar"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Descripción</div>
+                        <div class="field"><textarea id="descripcion" name="descripcion"></textarea></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Orden</div>
+                        <div class="field"><input type="number" id="orden" name="orden"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Número de plazas</div>
+                        <div class="field"><input type="number" id="plazas" name="plazas"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Fecha</div>
+                        <div class="field"><input type="date" id="fecha" name="fecha"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Hora</div>
+                        <div class="field"><input type="time" id="hora" name="hora"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <button id="updateSend" class="boton">Añadir Actividad</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <section class="none" {% if auth and evento %}style="display: none;"{% endif %}>
+        <div class="noneContenedor">
+            <div id="errorcontainer">
+                <div class="alerta_Login">
+                    <h1>Debe iniciar sesión como promotor y seleccionar un evento para añadir actividades</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

@@ -1,0 +1,210 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+.azul {
+    background-color: rgb(73, 73, 233);
+    color: white;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+}
+
+.negro {
+    background-color: rgb(39, 39, 39);
+    color: white;
+}
+
+.navegacion {
+    width: 100%;
+    height: 50px;
+    align-items: center;
+}
+
+#izquierda {
+    width: 50%;
+    height: 100%;
+    align-items: center;
+    gap: 10px;
+    padding-left: 20px;
+}
+
+#izquierda div {
+    height: 100%;
+    text-align: center;
+    align-content: center;
+}
+
+#izquierda2 {
+    padding-left: 30px;
+}
+
+#izquierda div div{
+    height: 100%;
+    width: max-content;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+    align-content: center;
+}
+
+#izquierda div div:hover{
+    background-color: blue;
+}
+
+#derecha {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+    gap: 10px;
+    padding-right: 20px;
+}
+
+#derecha div{
+    height: 100%;
+    width:250px;
+    text-align: center;
+    align-content: center;
+}
+
+#derecha div:hover{
+    background-color: blue;
+}
+
+.fila {
+    display: flex;
+    flex-direction: row;
+}
+
+.columna {
+    display: flex;
+    flex-direction: column;
+}
+
+#izquierda {
+    width: 50%;
+    height: 100%;
+    align-items: center;
+    gap: 10px;
+    padding-left: 20px;
+}
+
+#izquierda2 {
+    padding-left: 30px;
+}
+
+.ignoreLink {
+    text-decoration: inherit;
+    color: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    padding-left: 15%;
+    padding-right: 15%;
+    align-items: center;
+}
+
+.barra {
+    width: 2px;
+    background-color: white;
+    height: auto;
+    margin: 0 20px;
+    align-self: stretch;
+}
+
+.barra2 {
+    width: auto;
+    background-color: rgb(39, 39, 39);
+    height: 2px;
+    margin: 0 20px;
+    align-self: stretch;
+}
+
+#redesSociales {
+    gap: 40px;
+}
+
+.footer {
+    display: flex;
+    width: 70%;
+    padding-left: 15%;
+    padding-right: 15%;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    align-items: stretch;
+}
+
+#contacto {
+    width: 25%;
+    align-items: center;
+    align-content: center;
+    padding-right: 5%;
+    padding-bottom: 40px;
+}
+
+#contactoCorreo {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+#indices {
+    display: flex;
+    width: 60%;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#titulo {
+    width: fit-content;
+    color: rgb(39, 39, 39);
+    justify-items: center;
+}
+
+.margin2 {
+    margin: 30px;
+}
+
+#ticket {
+    width: 100%;
+    height: 500px;
+    align-items: center;
+    justify-content: center;
+}
+
+#capsulaTicket {
+    display: flex;
+    border: solid 2px rgb(73, 73, 233);
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+.qr {
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+}
+
+.tituloEvento {
+    font-size: 22px;
+}
+
+.fecha {
+    font-size: 18px;
+}
+
+h1 {
+    margin-top: 15px;
+    font-family: 'Arial', 'Helvetica', sans-serif;
+}

@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscripción a evento{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/inscripcion_evento.css') }}">
+{% endblock %}
+
+{% block body %}
+<main>
+    <section class="main noSignin" {% if auth %}style="display: none;"{% endif %}>
+        <div id="errorcontainer">
+            <div class="alerta_errorLogin2">
+                <h1>Debe tener sesión iniciada para inscribirse a eventos.</h1>
+            </div>
+        </div>
+    </section>
+    <section class="main" {% if not auth %}style="display: none;"{% endif %}>
+        <div id="titulo"><h1>Inscripción a evento</h1></div>
+        <div class="barra2"></div>
+        <div class="fila" id="loginContainer">
+            <div id="logindiv">
+                <form class="margin" id="update" method="post">
+                    <h1>Datos adicionales</h1>
+                    
+                    {% if errores is not empty %}
+                        <div class="alerta_errorLogin">
+                            <p><b>Errores</b></p>
+                            <ul>
+                                {% for error in errores %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    {% if success %}
+                        <div class="alerta_exito">
+                            Inscripción realizada correctamente
+                        </div>
+                    {% endif %}
+
+                    <div class="filaLogin">
+                        <div class="label">Nombre completo del asistente</div>
+                        <div class="field"><input type="text" id="nombre" name="nombre"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Edad</div>
+                        <div class="field"><input type="number" id="edad" name="edad"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">DNI</div>
+                        <div class="field"><input type="text" id="dni" name="dni"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Alergias (especificar cuales)</div>
+                        <div class="field"><input type="text" id="alergia" name="alergia"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <button id="updateSend" class="boton">Inscribirse</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

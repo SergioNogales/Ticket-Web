@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Landing Page{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/landing_page.css') }}">
+{% endblock %}
+
+{% block body %}
+    <main>
+        <section class="main">
+            <div class="margin2 main">
+                <h1>Ven al Circo del Sol</h1>
+                <a href="{{ path('listaeventos') }}"><img src="{{ asset('images/anuncio1.png') }}"></a>
+            </div>
+            <div class="barra2 margin2"></div>
+            <div class="margin2 main">
+                <h1>Conciertos más populares</h1>
+                <div class="fila">
+                    <a href="{{ path('listaeventos') }}"><img src="{{ asset('images/anuncio2.png') }}"></a>
+                    <a href="{{ path('listaeventos') }}"><img src="{{ asset('images/anuncio3.png') }}"></a>
+                </div>
+            </div>
+            {% if conciertos is defined %}
+            <div class="margin2 main">
+                <h1>Proximos Conciertos</h1>
+                <div class="fila">
+                {% for concierto in conciertos %}
+                <article class="evento">
+                    <div class="tituloEvento"> {{concierto.nombre}} </div>
+                    <div class="descEvento"> {{concierto.lugar}} </div>
+                    <div class="fecha">
+                        Desde {{ concierto.fechaInicio|date('d/m/Y H:i') }} 
+                        hasta {{ concierto.fechaFin|date('d/m/Y H:i') }}
+                    </div>
+                </article>
+                {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            <div class="barra2 margin2"></div>
+            {% if peliculas is defined %}
+            <div class="margin2 main">
+                <h1>Proximas Películas</h1>
+                <div class="fila"> 
+                {% for pelicula in peliculas %}
+                <article class="evento">
+                    <div class="tituloEvento"> {{pelicula.nombre}} </div>
+                    <div class="descEvento"> {{pelicula.lugar}} </div>
+                    <div class="fecha">
+                        Desde {{ pelicula.fechaInicio|date('d/m/Y H:i') }} 
+                        hasta {{ pelicula.fechaFin|date('d/m/Y H:i') }}
+                    </div>
+                </article>
+                {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            <div class="barra2 margin2"></div>
+            <div class="margin2 main">
+                <h1>Eventos más esperados</h1>
+                <div class="fila">
+                    <a class="ignoreLink fila" href="{{ path('listaeventos') }}">
+                        <article class="evento" id="e1">
+                            <div class="fila">
+                                <div><img src="{{ asset('images/anuncio6.png') }}"></div>
+                                <div>
+                                    <div class="tituloEvento">Rells B</div>
+                                    <div class="descEvento">Barcelona, Sala Laut</div>
+                                    <div class="fecha">Sábado 8 de Febrero 2025</div>
+                                </div>    
+                            </div>
+                        </article>
+                        <article class="evento" id="e2">
+                            <div class="fila">
+                                <div><img src="{{ asset('images/anuncio7.png') }}"></div>
+                                <div>
+                                    <div class="tituloEvento">Kidd Keo</div>
+                                    <div class="descEvento">A Coruña, Sala Pelicano</div>
+                                    <div class="fecha">Sábado 1 de Febrero 2025</div>
+                                </div>    
+                            </div>
+                        </article>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}

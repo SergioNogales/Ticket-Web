@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar Actividad{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/crear_actividad.css') }}">
+{% endblock %}
+
+{% block body %}
+<main>
+    <section class="main promotor" {% if not auth or not actividad %}style="display: none;"{% endif %}>
+        <div id="titulo"><h1>Editar Actividad</h1></div>
+        <div class="barra2"></div>
+        <div class="margin">
+            <div id="logindiv">
+                <form class="margin" id="update" method="post">
+                    <h1>Datos de la Actividad</h1>
+
+                    {% if error is not empty %}
+                        <div class="alerta_errorLogin">
+                            <p><b>Errores</b></p>
+                            <ul>
+                                {% for err in error %}
+                                    <li>{{ err }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <div class="alerta_exito" {% if not success %}style="display: none;"{% endif %}>
+                        La actividad se ha editado con éxito.
+                    </div>
+
+                    <div class="filaLogin">
+                        <div class="label">Nuevo Nombre</div>
+                        <div class="field"><input type="text" id="nombre" name="nombre" value="{{ nombre ?? '' }}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Nuevo Lugar</div>
+                        <div class="field"><input type="text" id="lugar" name="lugar" value="{{ lugar ?? '' }}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Nueva Descripción</div>
+                        <div class="field"> <textarea id="descripcion" name="descripcion">{{ descripcion ?? '' }}</textarea><div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Nuevo Orden</div>
+                        <div class="field"><input type="number" id="orden" name="orden" min="1" value="{{ orden ?? '' }}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Nuevo Número de plazas</div>
+                        <div class="field"><input type="number" id="plazas" name="plazas" min="1" value="{{ plazas ?? '' }}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Nueva Fecha</div>
+                        <div class="field"><input type="date" id="fecha" name="fecha" value="{{ (fecha is defined and fecha ? fecha|date('Y-m-d') : '') }}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <div class="label">Nueva Hora</div>
+                        <div class="field"><input type="time" id="hora" name="hora" value="{{ (hora is defined and hora ? hora|date('H:i') : '') }}"></div>
+                    </div>
+                    <div class="filaLogin">
+                        <button id="updateSend" class="boton">Editar Actividad</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <section class="none" {% if auth and actividad %}style="display: none;"{% endif %}>
+        <div class="noneContenedor">
+            <div id="errorcontainer">
+                <div class="alerta_Login">
+                    <h1>Debe iniciar sesión como promotor y seleccionar una actividad para editar</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

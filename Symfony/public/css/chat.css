@@ -1,0 +1,193 @@
+.chat-container {
+    display: flex;
+    height: 70vh;
+    border: 1px solid rgb(39, 39, 39);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 20px 0;
+    background-color: white;
+}
+
+.contactos {
+    width: 30%;
+    border-right: 1px solid rgb(39, 39, 39);
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(245, 245, 245);
+}
+
+.contactos-header {
+    padding: 15px;
+    border-bottom: 1px solid rgb(39, 39, 39);
+    background-color: rgb(73, 73, 233);
+    color: white;
+}
+
+.contactos-header input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid rgb(39, 39, 39);
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.lista-contactos {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.contacto {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: rgb(39, 39, 39);
+    text-decoration: none;
+}
+
+.contacto:hover {
+    background-color: rgb(220, 220, 220);
+}
+
+.contacto.activo {
+    background-color: rgb(200, 220, 255);
+}
+
+.contacto-info {
+    flex: 1;
+}
+
+.contacto-nombre {
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
+
+.contacto-rol {
+    font-size: 0.9em;
+    color: rgb(100, 100, 100);
+    font-family: Arial, sans-serif;
+}
+
+.conversacion {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+}
+
+.conversacion-header {
+    padding: 15px;
+    border-bottom: 1px solid rgb(39, 39, 39);
+    background-color: rgb(73, 73, 233);
+    color: white;
+}
+
+.interlocutor-nombre {
+    font-weight: bold;
+    font-size: 1.1em;
+    font-family: Arial, sans-serif;
+}
+
+.interlocutor-rol {
+    font-size: 0.9em;
+    color: rgb(220, 220, 220);
+    font-family: Arial, sans-serif;
+}
+
+.mensajes-container {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+}
+
+.mensaje {
+    max-width: 70%;
+    margin-bottom: 15px;
+    font-family: Arial, sans-serif;
+}
+
+.mensaje-propio {
+    align-self: flex-end;
+}
+
+.mensaje-recibido {
+    align-self: flex-start;
+}
+
+.mensaje-contenido {
+    padding: 10px 15px;
+    border-radius: 18px;
+    position: relative;
+}
+
+.mensaje-propio .mensaje-contenido {
+    background-color: rgb(220, 248, 198);
+    border-bottom-right-radius: 0;
+    border: 1px solid rgb(200, 230, 180);
+}
+
+.mensaje-recibido .mensaje-contenido {
+    background-color: rgb(240, 240, 240);
+    border-bottom-left-radius: 0;
+    border: 1px solid rgb(220, 220, 220);
+}
+
+.mensaje-texto {
+    word-wrap: break-word;
+    color: rgb(39, 39, 39);
+}
+
+.mensaje-fecha {
+    font-size: 0.7em;
+    color: rgb(100, 100, 100);
+    text-align: right;
+    margin-top: 5px;
+}
+
+.mensaje-input {
+    padding: 15px;
+    border-top: 1px solid rgb(39, 39, 39);
+    background-color: rgb(245, 245, 245);
+}
+
+.mensaje-input form {
+    display: flex;
+    gap: 10px;
+}
+
+.mensaje-input textarea {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid rgb(39, 39, 39);
+    border-radius: 4px;
+    resize: none;
+    height: 60px;
+    font-family: Arial, sans-serif;
+}
+
+.mensaje-input button {
+    background-color: rgb(73, 73, 233);
+    color: white;
+    border: 2px solid rgb(39, 39, 39);
+    border-radius: 4px;
+    padding: 0 20px;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+}
+
+.mensaje-input button:hover {
+    background-color: blue;
+}
+
+.no-contactos, .no-mensajes, .selecciona-contacto {
+    padding: 20px;
+    text-align: center;
+    color: rgb(100, 100, 100);
+    font-family: Arial, sans-serif;
+    margin: auto;
+}

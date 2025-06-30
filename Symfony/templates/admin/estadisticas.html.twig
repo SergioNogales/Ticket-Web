@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Estadísticas de la Aplicación{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/listado_eventos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/estadisticas.css') }}">
+{% endblock %}
+
+{% block body %}
+<main>
+    <section class="noSignin" {% if auth %}style="display: none;"{% endif %}>
+        <div class="noneContenedor">
+            <div id="errorcontainer">
+                <div class="alerta_Login">
+                    <h1>Debe iniciar sesión como administrador para ver las estadísticas</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="main estadisticas" {% if not auth %}style="display: none;"{% endif %}>
+        <div id="titulo"><h1>Estadísticas Generales</h1></div>
+        <div class="barra2"></div>
+        
+        <div class="resumenEstadisticas">
+            <div class="filaEstadisticas">
+                <div class="tarjetaEstadistica">
+                    <h2>Usuarios Registrados</h2>
+                    <div class="valor">{{ total_usuarios ?? 0 }}</div>
+                </div>
+                <div class="tarjetaEstadistica">
+                    <h2>Eventos Activos</h2>
+                    <div class="valor">{{ total_eventos ?? 0 }}</div>
+                </div>
+                <div class="tarjetaEstadistica">
+                    <h2>Reservas Totales</h2>
+                    <div class="valor">{{ total_reservas ?? 0 }}</div>
+                </div>
+            </div>
+            
+            <div class="filaEstadisticas">
+                <div class="tarjetaEstadistica">
+                    <h2>Promotores</h2>
+                    <div class="valor">{{ total_promotores ?? 0 }}</div>
+                </div>
+                <div class="tarjetaEstadistica">
+                    <h2>Administradores</h2>
+                    <div class="valor">{{ total_admin ?? 0 }}</div>
+                </div>
+                <div class="tarjetaEstadistica">
+                    <h2>Atividades</h2>
+                    <div class="valor">{{ total_actividades ?? 0 }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tablasDetalle">
+            <div class="tablaEstadisticas">
+                <h2>Usuarios Registrados</h2>
+                <div class="filaAsistentes encabezado">
+                    <div class="columnaAsistentes">Nombre</div>
+                    <div class="columnaAsistentes">Email</div>
+                    <div class="columnaAsistentes">Rol</div>
+                </div>
+                {% for usuario in usuarios %}
+                    <div class="filaAsistentes">
+                        <div class="columnaAsistentes">{{ usuario.nombre }}</div>
+                        <div class="columnaAsistentes">{{ usuario.email }}</div>
+                        <div class="columnaAsistentes">{{ usuario.rol}}</div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="tablaEstadisticas">
+                <h2>Eventos Registrados</h2>
+                <div class="filaAsistentes encabezado">
+                    <div class="columnaAsistentes">Nombre</div>
+                    <div class="columnaAsistentes">Fecha</div>
+                </div>
+                {% for evento in eventos %}
+                    <div class="filaAsistentes">
+                        <div class="columnaAsistentes">{{ evento.nombre }}</div>
+                        <div class="columnaAsistentes">{{ evento.fechaInicio|date('d/m/Y') }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

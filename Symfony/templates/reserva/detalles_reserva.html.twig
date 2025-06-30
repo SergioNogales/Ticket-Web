@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Detalles de Reserva{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/reserva.css') }}">
+{% endblock %}
+
+{% block body %}
+<main>
+    <section class="noSignin" {% if auth %}style="display: none;"{% endif %}>
+        <div id="errorcontainer">
+            <div class="alerta_Login">
+                <h1>Debe iniciar sesión para comprar un ticket a un evento.</h1>
+            </div>
+        </div>
+    </section>
+
+    <section class="noSignin" {% if evento is defined and reserva is defined%}style="display: none;"{% endif %}>
+        <div id="errorcontainer">
+            <div class="alerta_Login">
+                <h1>Debe seleccionar una reserva desde su listado de reservas.</h1>
+            </div>
+        </div>
+    </section>
+
+    {% if auth and evento is defined and reserva is defined %}
+        <section class="main">
+            <div id="titulo"><h1>Detalles de la reserva</h1></div>
+            <div class="barra2"></div>
+        </section>
+
+        <section id="evento">
+            <div class="main">
+                <div class="fila" id="ticket">
+                    <div id="capsulaTicket">
+                        <div class="margin2">
+                            <div class="tituloEvento">{{ evento.nombre }}</div>
+                            <div class="descEvento">{{ evento.lugar }}</div>
+                            <div class="descEvento">{{ reserva.nombre }}</div>
+                            <div class="descEvento">{{ reserva.dni }}</div>
+                            <div class="fecha">
+                                {{ evento.fechaInicio|date('Y-m-d') }} hasta: {{ evento.fechaFin|date('Y-m-d') }}
+                            </div>
+                            <div>Código entrada: {{ reserva.id }}</div>
+                            <form method="post" style="display: inline;">
+                                <button type="submit" name="accion" value="cancelar" class="boton">Cancelar Reserva</button>
+                            </form>
+                        </div>
+                        <img src="{{ asset('images/qr.png') }}" class="qr">
+                    </div>
+                </div>
+
+                {% if actividades is defined and actividades is not empty %}
+                    <div class="actividades negro">
+                        <div class="margin">
+                            <div class="tituloActividades">Actividades programadas:</div>
+                            <ul>
+                            {% for actividad in actividades %}
+                                <li>
+                                    {{ actividad.nombre }} - Descripción: {{ actividad.descripcion }} 
+                                    - Fecha: {{ actividad.fecha|date('Y-m-d') }} 
+                                    - Lugar: {{ actividad.lugar }} 
+                                    - Plazas: {{ actividad.plazas }}
+
+                                    {% set reservada = false %}
+                                    {% for reserva in reservaActividades %}
+                                        {% if reserva.actividad.id == actividad.id %}
+                                            {% set reservada = reserva %}
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    {% if reservada %}
+                                        <li>RESERVADA</li>
+                                        <form method="post" style="display: inline;">
+                                            <input type="hidden" name="reserva" value="{{ reservada.reserva.id }}">
+                                            <input type="hidden" name="reservaId" value="{{ reservada.id }}">
+                                            <button type="submit" name="accion" value="cancelarActividad" class="boton">Cancelar Reserva</button>
+                                        </form>
+                                    {% else %}
+                                        <form method="post" style="display: inline;">
+                                            <input type="hidden" name="actividad" value="{{ actividad.id }}">
+                                            <button type="submit" name="accion" value="reservarActividad" class="boton">Reservar Actividad</button>
+                                        </form>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="tituloActividades">No hay actividades programadas</div>
+                {% endif %}
+            </div>
+        </section>
+        {% endif %}
+</main>
+{% endblock %}
