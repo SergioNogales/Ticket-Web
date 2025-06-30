@@ -11,7 +11,7 @@ Página web de venta de tickets completamente funcional implementada en distinta
   <strong>Version Doctrine:</strong><br>
   Añade a lo anteriormente implementado un sistema de reserva y compra de tickets de eventos, se sustituye el PDO por Doctrine ORM<br><br>
   <strong>Version Symfony:</strong><br>
-  (A implementar) Versión completa del programa. 
+  Versión completa del programa, además de añadir sistemas de seguridad. 
 </div>
 
 -------
